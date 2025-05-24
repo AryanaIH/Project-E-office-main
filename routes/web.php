@@ -13,10 +13,19 @@ use App\Http\Controllers\AuthController;
 
 
 
-// Dashboard berdasarkan role
 Route::middleware('auth')->group(function () {
-    Route::get('/', [DashboardController::class, 'index']);
+    // Route utama dashboard, bisa diakses via / atau /dashboard
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index']);
+
+    // Route khusus admin dan operator langsung panggil controller yang sama,
+    // controller akan cek level user dan tampilkan view yang sesuai
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/operator/dashboard', [DashboardController::class, 'index'])->name('operator.dashboard');
+
+    // Ubah password
+    Route::get('/ubah-password', [AuthController::class, 'showChangePasswordForm'])->name('ubah-password.form');
+    Route::post('/ubah-password', [AuthController::class, 'changePassword'])->name('ubah-password.update');
 });
 
 Route::get('/tambahSurat', function () {
@@ -52,8 +61,8 @@ Route::get('/monitoringProyek', function () {
     return view('monitoringProyek');
 });
 
-Route::get('/laporan', function () {
-    return view('laporan');
+Route::get('/Detail', function () {
+    return view('Detail');
 });
 
 Route::get('/pengaturan', function () {
@@ -128,6 +137,7 @@ Route::get('/tujuan-surat/{id}', [TujuanSuratController::class, 'show'])->name('
 
 
 Route::resource('dokumen-proyek', DokumenProyekController::class);
+
 
 
 use App\Http\Controllers\MonitoringController;

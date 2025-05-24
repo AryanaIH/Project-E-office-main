@@ -45,7 +45,7 @@
 <div class="wrapper">
   <!-- Sidebar -->
   <div class="sidebar">
-    @include('layout.Adminnavbar')
+    @include('layout.navbar')
   </div>
 
   <!-- Konten utama scrollable -->

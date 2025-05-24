@@ -122,7 +122,7 @@
                 </div>
               </td>
               <td>
-              <a href="/laporan" class="btn btn-sm btn-primary">Detail</a>
+              <a href="/Detail" class="btn btn-sm btn-primary">Detail</a>
               </td>
             </tr>
             <tr>

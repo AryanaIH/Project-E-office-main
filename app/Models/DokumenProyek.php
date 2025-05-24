@@ -8,27 +8,20 @@ class DokumenProyek extends Model
 {
     protected $table = 'dokumen_proyek';
     protected $primaryKey = 'id_dokumen';
-    public $incrementing = false; // Karena ID bukan auto-increment
+    public $incrementing = false; // Karena id_dokumen string, bukan auto increment
     protected $keyType = 'string';
 
     protected $fillable = [
         'id_dokumen',
-        'jenis_dokumen',
-        'template_dokumen',
+        'jenis_surat_id',
+        'template_dokumen',  // path file string
         'approval',
     ];
 
-    /**
-     * Relasi ke berkas dokumen proyek
-     */
-    // public function berkas()
-    // {
-    //     return $this->hasMany(BerkasDokumenProyek::class, 'id_dokumen', 'id_dokumen');
-    // }
-
     public function jenisSurat()
-{
-    return $this->belongsTo(JenisSurat::class, 'jenis_surat_id');
-}
+    {
+        return $this->belongsTo(JenisSurat::class, 'jenis_surat_id');
+    }
 
+    // HAPUS fungsi berkas() karena tidak sesuai
 }

@@ -9,24 +9,27 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        // Data contoh, bisa diganti query database jika sudah tersedia
         $data = [
-            'draft_surat' => 5,
-            'surat_disetujui' => 12,
-            'surat_terkirim' => 20,
-            'proyek_baru' => 3,
-            'proyek_berjalan' => 8,
-            'proyek_selesai' => 15,
+            'draft_surat'      => 5,
+            'surat_disetujui'  => 12,
+            'surat_terkirim'   => 20,
+            'proyek_baru'      => 3,
+            'proyek_berjalan'  => 8,
+            'proyek_selesai'   => 15,
         ];
 
+        // Ambil user yang sedang login
         $user = Auth::user();
-        $role = strtolower(trim($user->role));
+        $level = strtolower(trim($user->level));
 
-        if ($role === 'admin') {
-            return view('Admindashboard', compact('data'));
-        } elseif ($role === 'operator') {
+        // Tampilkan dashboard sesuai level user
+        if ($level === 'admin') {
+            return view('Operatordashboard', compact('data'));
+        } elseif ($level === 'operator') {
             return view('Operatordashboard', compact('data'));
         } else {
-            abort(403, 'Role tidak dikenali.');
+            abort(403, 'Level tidak dikenali.');
         }
     }
 }

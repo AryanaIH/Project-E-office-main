@@ -13,11 +13,16 @@ class SuratKeluar extends Model
 
     protected $fillable = [
         'nomor_surat',
+        'jenis_surat_id',
         'tanggal_surat',
-        'jenis_surat',
         'perihal',
         'tujuan',
         'isi_surat',
         'status',
     ];
+
+    public function jenisSurat()
+    {
+        return $this->belongsTo(JenisSurat::class, 'jenis_surat_id');
+    }
 }

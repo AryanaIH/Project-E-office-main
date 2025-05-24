@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash; 
 
 class AuthController extends Controller
 {
@@ -23,15 +24,15 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             $user = Auth::user();
-            $role = strtolower(trim($user->role)); // normalize role
+            $level = strtolower(trim($user->level)); // <-- gunakan kolom 'level'
 
-            if ($role === 'admin') {
+            if ($level === 'admin') {
                 return redirect()->intended('/admin/dashboard');
-            } elseif ($role === 'operator') {
+            } elseif ($level === 'operator') {
                 return redirect()->intended('/operator/dashboard');
             } else {
                 Auth::logout();
-                return back()->with('error', 'Role tidak dikenali');
+                return back()->with('error', 'Level tidak dikenali');
             }
         }
 
@@ -44,5 +45,34 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
+    }
+
+    // Form ubah password
+    public function showChangePasswordForm()
+    {
+        return view('ubah-password');
+    }
+
+    // Proses ubah password
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required'],
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $user = Auth::user();
+
+        // Cek password lama
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Password lama salah'])->withInput();
+        }
+
+        // Update password baru
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return redirect()->route('ubah-password.form')->with('success', 'Password berhasil diubah!');
+
     }
 }

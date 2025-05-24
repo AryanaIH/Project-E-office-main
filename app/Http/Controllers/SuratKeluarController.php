@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\SuratKeluar;
+use App\Models\JenisSurat;
+use App\Models\TujuanSurat;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class SuratKeluarController extends Controller
 {
-    // Tampilkan daftar surat keluar + FILTER
     public function index(Request $request)
     {
         $query = SuratKeluar::query();
@@ -25,8 +26,8 @@ class SuratKeluarController extends Controller
             $query->whereDate('tanggal_surat', '<=', $request->tanggal_akhir);
         }
 
-        if ($request->filled('jenis_surat')) {
-            $query->where('jenis_surat', $request->jenis_surat);
+        if ($request->filled('jenis_surat_id')) {
+            $query->where('jenis_surat_id', $request->jenis_surat_id);
         }
 
         if ($request->filled('search')) {
@@ -39,73 +40,91 @@ class SuratKeluarController extends Controller
 
         $suratKeluar = $query->latest()->paginate(10);
 
-        return view('suratkeluar', compact('suratKeluar'));
+        $jenisSurat = JenisSurat::all();
+        $tujuanSurat = TujuanSurat::all();
+
+        return view('suratkeluar', compact('suratKeluar', 'jenisSurat', 'tujuanSurat'));
     }
 
-    // Simpan surat keluar baru
+    public function create()
+    {
+        $jenisSurat = JenisSurat::all();
+        $tujuanSurat = TujuanSurat::all();
+        return view('suratkeluar.create', compact('jenisSurat', 'tujuanSurat'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
             'nomor_surat' => 'required|string|max:255',
             'tanggal_surat' => 'required|date',
-            'jenis_surat' => 'required|string',
+            'jenis_surat_id' => 'required|exists:jenis_surat,id',
             'perihal' => 'required|string',
             'tujuan' => 'required|string',
             'isi_surat' => 'required|string',
             'status' => 'nullable|string|in:Draft,Dikirim,Disetujui,Ditolak',
         ]);
-        
+
         SuratKeluar::create([
             'nomor_surat' => $request->nomor_surat,
             'tanggal_surat' => $request->tanggal_surat,
-            'jenis_surat' => $request->jenis_surat,
+            'jenis_surat_id' => $request->jenis_surat_id,
             'perihal' => $request->perihal,
             'tujuan' => $request->tujuan,
             'isi_surat' => $request->isi_surat,
             'status' => $request->status ?? 'Draft',
         ]);
-        
-        return redirect()->back()->with('success', 'Surat berhasil disimpan.');
+
+        return redirect()->route('surat-keluar.index')->with('success', 'Surat berhasil disimpan.');
     }
 
-    // Tampilkan detail surat
     public function show($id)
     {
         $surat = SuratKeluar::findOrFail($id);
-        return view('surat-keluar.show', compact('surat'));
+        return view('suratkeluar.show', compact('surat'));
     }
 
-    // Form edit surat
     public function edit($id)
     {
         $surat = SuratKeluar::findOrFail($id);
-        return view('surat-keluar.edit', compact('surat'));
+        $jenisSurat = JenisSurat::all();
+        $tujuanSurat = TujuanSurat::all();
+        return view('suratkeluar.edit', compact('surat', 'jenisSurat', 'tujuanSurat'));
     }
 
-    // Simpan perubahan surat
     public function update(Request $request, $id)
     {
         $surat = SuratKeluar::findOrFail($id);
 
         $request->validate([
-            'jenis_surat' => 'required|string|max:255',
+            'nomor_surat' => 'required|string|max:255',
             'tanggal_surat' => 'required|date',
+            'jenis_surat_id' => 'required|exists:jenis_surat,id',
             'perihal' => 'required|string|max:255',
             'tujuan' => 'required|string|max:255',
             'isi_surat' => 'required|string',
             'status' => 'nullable|string|in:Draft,Dikirim,Disetujui,Ditolak',
         ]);
-        
+
         $surat->update([
-            'jenis_surat' => $request->jenis_surat,
+            'nomor_surat' => $request->nomor_surat,
             'tanggal_surat' => $request->tanggal_surat,
+            'jenis_surat_id' => $request->jenis_surat_id,
             'perihal' => $request->perihal,
             'tujuan' => $request->tujuan,
             'isi_surat' => $request->isi_surat,
             'status' => $request->status ?? $surat->status,
         ]);
-        
+
         return redirect()->route('surat-keluar.index')->with('success', 'Surat berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        $surat = SuratKeluar::findOrFail($id);
+        $surat->delete();
+
+        return redirect()->route('surat-keluar.index')->with('success', 'Surat berhasil dihapus.');
     }
 
     public function preview($id)
@@ -113,16 +132,6 @@ class SuratKeluarController extends Controller
         $surat = SuratKeluar::findOrFail($id);
 
         $pdf = Pdf::loadView('pdf.surat-keluar', compact('surat'));
-        return $pdf->stream('surat-keluar.pdf'); // menampilkan di browser
-    }
-
-    // Generate nomor surat otomatis (belum dipakai di atas)
-    private function generateNomorSurat($jenis)
-    {
-        $latest = SuratKeluar::count() + 1;
-        $bulan = date('m');
-        $tahun = date('Y');
-        $kode = strtoupper(substr($jenis, 0, 3));
-        return sprintf("%03d/%s/%s/%s", $latest, $kode, $bulan, $tahun);
+        return $pdf->stream('surat-keluar.pdf');
     }
 }

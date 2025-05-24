@@ -13,27 +13,23 @@
       padding: 0;
       height: 100%;
     }
-
     .wrapper {
       display: flex;
       height: 100vh;
       overflow: hidden;
     }
-
     .sidebar {
       width: 250px;
       background-color: #f8f9fa;
       border-right: 1px solid #dee2e6;
       flex-shrink: 0;
     }
-
     .content {
       flex-grow: 1;
       overflow-y: auto;
       padding: 2rem;
       background-color: #f5f5f5;
     }
-
     .content-inner {
       min-height: 100%;
     }
@@ -70,57 +66,79 @@
         </ol>
       </nav>
 
-<!-- Form Master Pengguna -->
-<div class="card shadow-sm mb-5">
-  <div class="card-body">
-    <h4 class="card-title text-center mb-4">Form Master Pengguna</h4>
+      <!-- Form Master Pengguna -->
+      <div class="card shadow-sm mb-5">
+        <div class="card-body">
+          <h4 class="card-title text-center mb-4">Form Master Pengguna</h4>
 
-    <form action="{{ isset($editData) ? route('pengguna.update', $editData->id) : route('pengguna.store') }}" method="POST">
-      @csrf
-      @if(isset($editData))
-        @method('PUT')
-      @endif
+          <form action="{{ isset($editData) ? route('pengguna.update', $editData->id) : route('pengguna.store') }}" method="POST">
+            @csrf
+            @if(isset($editData))
+              @method('PUT')
+            @endif
 
-      <div class="mb-3">
-        <label for="id_pengguna" class="form-label">ID Pengguna</label>
-        <input type="text" class="form-control" name="id_pengguna" id="id_pengguna" value="{{ old('id_pengguna', $editData->id_pengguna ?? '') }}" placeholder="Masukkan ID Pengguna" {{ isset($editData) ? 'readonly' : '' }}>
+            <div class="mb-3">
+              <label for="id_pengguna" class="form-label">ID Pengguna</label>
+              <input type="text" class="form-control" name="id_pengguna" id="id_pengguna"
+                value="{{ old('id_pengguna', $editData->id_pengguna ?? '') }}"
+                placeholder="Masukkan ID Pengguna" {{ isset($editData) ? 'readonly' : '' }}>
+              @error('id_pengguna') <div class="text-danger small">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="mb-3">
+              <label for="nama_pengguna" class="form-label">Nama Pengguna</label>
+              <input type="text" class="form-control" name="nama_pengguna" id="nama_pengguna"
+                value="{{ old('nama_pengguna', $editData->nama_pengguna ?? '') }}"
+                placeholder="Masukkan Nama Pengguna">
+              @error('nama_pengguna') <div class="text-danger small">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="mb-3">
+              <label for="jabatan" class="form-label">Jabatan</label>
+              <input type="text" class="form-control" name="jabatan" id="jabatan"
+                value="{{ old('jabatan', $editData->jabatan ?? '') }}"
+                placeholder="Masukkan Jabatan">
+              @error('jabatan') <div class="text-danger small">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="mb-3">
+              <label for="hak_akses" class="form-label">Hak Akses</label>
+              <select class="form-select" name="hak_akses" id="hak_akses" required>
+                <option value="">Pilih Hak Akses</option>
+                <option value="admin" {{ (old('hak_akses', $editData->hak_akses ?? '') == 'admin') ? 'selected' : '' }}>Admin</option>
+                <option value="user" {{ (old('hak_akses', $editData->hak_akses ?? '') == 'user') ? 'selected' : '' }}>User</option>
+              </select>
+              @error('hak_akses') <div class="text-danger small">{{ $message }}</div> @enderror
+            </div>
+
+            <div class="mb-3">
+              <label for="id_departement" class="form-label">Departemen</label>
+             <select class="form-select" name="id_departement" id="id_departement" required>
+            <option value="">Pilih Departemen</option>
+            @foreach ($departements as $dept)
+              <option value="{{ $dept->id }}"
+                {{ old('id_departement', $editData->id_departement ?? '') == $dept->id ? 'selected' : '' }}>
+                {{ $dept->nama }} (ID: {{ $dept->id }})
+              </option>
+            @endforeach
+          </select>
+              @error('id_departement') <div class="text-danger small">{{ $message }}</div> @enderror
+            </div>
+           <div class="mb-3">
+            <label for="nama_pengirim" class="form-label">Nama Pengirim</label>
+            <input type="text" class="form-control" name="nama_pengirim" id="nama_pengirim"
+              value="{{ old('nama_pengirim', $editData->nama_pengirim ?? '') }}"
+              placeholder="Masukkan Nama Pengirim">
+            @error('nama_pengirim') <div class="text-danger small">{{ $message }}</div> @enderror
+          </div>
+            <div class="d-flex flex-wrap gap-2">
+              <button type="submit" class="btn btn-success">{{ isset($editData) ? 'Update' : 'Simpan' }}</button>
+              <a href="{{ route('pengguna.index') }}" class="btn btn-primary">Reset</a>
+            </div>
+          </form>
+
+        </div>
       </div>
-
-      <div class="mb-3">
-        <label for="nama_pengguna" class="form-label">Nama Pengguna</label>
-        <input type="text" class="form-control" name="nama_pengguna" id="nama_pengguna" value="{{ old('nama_pengguna', $editData->nama_pengguna ?? '') }}" placeholder="Masukkan Nama Pengguna">
-      </div>
-
-      <div class="mb-3">
-        <label for="jabatan" class="form-label">Jabatan</label>
-        <input type="text" class="form-control" name="jabatan" id="jabatan" value="{{ old('jabatan', $editData->jabatan ?? '') }}" placeholder="Masukkan Jabatan">
-      </div>
-
-      <div class="mb-3">
-        <label for="hak_akses" class="form-label">Hak Akses</label>
-        <select class="form-select" name="hak_akses" id="hak_akses">
-          <option value="">Pilih Hak Akses</option>
-          <option value="admin" {{ (old('hak_akses', $editData->hak_akses ?? '') == 'admin') ? 'selected' : '' }}>Admin</option>
-          <option value="user" {{ (old('hak_akses', $editData->hak_akses ?? '') == 'user') ? 'selected' : '' }}>User</option>
-        </select>
-      </div>
-
-      <div class="mb-4">
-        <label for="password" class="form-label">Kata Sandi</label>
-        <input type="password" class="form-control" name="password" id="password" placeholder="Masukkan Kata Sandi">
-        @if(isset($editData))
-          <small class="text-muted">Biarkan kosong jika tidak ingin mengubah password.</small>
-        @endif
-      </div>
-
-      <div class="d-flex flex-wrap gap-2">
-        <button type="submit" class="btn btn-success">{{ isset($editData) ? 'Update' : 'Simpan' }}</button>
-        <a href="{{ route('pengguna.index') }}" class="btn btn-primary">Reset</a>
-      </div>
-    </form>
-  </div>
-</div>
-
 
       <!-- Tabel Data Pengguna -->
       <div class="card">
@@ -134,39 +152,42 @@
                   <th>Nama Pengguna</th>
                   <th>Jabatan</th>
                   <th>Hak Akses</th>
+                  <th>Nama Departemen</th>
+                  <th>Nama Pengirim</th>
                   <th class="text-center" style="width: 80px;">Aksi</th>
                 </tr>
               </thead>
               <tbody>
-  @forelse ($pengguna as $item)
-    <tr>
-      <td>{{ $item->id_pengguna }}</td>
-      <td>{{ $item->nama_pengguna }}</td>
-      <td>{{ $item->jabatan }}</td>
-      <td>{{ ucfirst($item->hak_akses) }}</td>
-      <td class="text-center d-flex gap-1 justify-content-center">
-        <!-- Tombol Edit -->
-        <a href="{{ route('pengguna.index', ['edit' => $item->id]) }}" class="btn btn-sm btn-warning" title="Edit">
-          <i class="bi bi-pencil-square"></i>
-        </a>
+                @forelse ($pengguna as $item)
+                  <tr>
+                    <td>{{ $item->id_pengguna }}</td>
+                    <td>{{ $item->nama_pengguna }}</td>
+                    <td>{{ $item->jabatan }}</td>
+                    <td>{{ ucfirst($item->hak_akses) }}</td>
+                    <td>{{ $item->departement->nama ?? 'Tidak ditemukan' }}</td>
+                    <td>{{ $item->nama_pengirim }}</td>
+                    <td class="text-center d-flex gap-1 justify-content-center">
+                      <!-- Tombol Edit -->
+                      <a href="{{ route('pengguna.index', ['edit' => $item->id]) }}" class="btn btn-sm btn-warning" title="Edit">
+                        <i class="bi bi-pencil-square"></i>
+                      </a>
 
-        <!-- Tombol Hapus -->
-        <form action="{{ route('pengguna.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-          @csrf
-          @method('DELETE')
-          <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
-            <i class="bi bi-trash"></i>
-          </button>
-        </form>
-      </td>
-    </tr>
-  @empty
-    <tr>
-      <td colspan="5" class="text-center">Tidak ada data pengguna</td>
-    </tr>
-  @endforelse
-</tbody>
-
+                      <!-- Tombol Hapus -->
+                      <form action="{{ route('pengguna.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-danger" title="Hapus">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                @empty
+                  <tr>
+                    <td colspan="7" class="text-center">Tidak ada data pengguna</td>
+                  </tr>
+                @endforelse
+              </tbody>
             </table>
           </div>
         </div>

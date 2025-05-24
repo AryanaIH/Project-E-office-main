@@ -9,7 +9,7 @@
 <body>
     <div class="d-flex">
         @include('layout.navbar')
-        <div class="flex-grow-1 p-3 m-2">
+    <div class="flex-grow-1 p-3 m-2">
             <div class=" mx-auto my-5 row col-9" >
                 <div>
                     <div class="col-md-12 text-center mt-3">

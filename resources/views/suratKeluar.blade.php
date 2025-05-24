@@ -134,7 +134,7 @@
                                     <tr>
                                         <td>{{ $surat->nomor_surat }}</td>
                                         <td>{{ \Carbon\Carbon::parse($surat->tanggal_surat)->translatedFormat('d F Y') }}</td>
-                                        <td>{{ $surat->jenis_surat }}</td>
+                                        <td>{{ $surat->jenisSurat->nama_jenis_surat ?? '-' }}</td>
                                         <td>{{ $surat->perihal }}</td>
                                         <td>{{ $surat->tujuan }}</td>
                                         <td>
@@ -185,11 +185,13 @@
                                     <dt class="col-sm-4">Tanggal Surat</dt>
                                     <dd class="col-sm-8">{{ \Carbon\Carbon::parse($surat->tanggal_surat)->translatedFormat('d F Y') }}</dd>
                                     <dt class="col-sm-4">Jenis Surat</dt>
-                                    <dd class="col-sm-8">{{ $surat->jenis_surat }}</dd>
+                                    <dd class="col-sm-8">{{ $surat->jenisSurat->nama_jenis_surat ?? '-' }}</dd>
                                     <dt class="col-sm-4">Perihal</dt>
                                     <dd class="col-sm-8">{{ $surat->perihal }}</dd>
                                     <dt class="col-sm-4">Tujuan</dt>
                                     <dd class="col-sm-8">{{ $surat->tujuan }}</dd>
+                                    <dt class="col-sm-4">Alamat</dt>
+                                    <dd class="col-sm-8">{{ $surat->alamat }}</dd>
                                     <dt class="col-sm-4">Isi Surat</dt>
                                     <dd class="col-sm-8"><div style="white-space: pre-line;">{{ $surat->isi_surat }}</div></dd>
                                 </dl>
@@ -207,7 +209,6 @@
 </div>
 
 <!-- Modal Buat Surat -->
-<<!-- Modal: Form Pembuatan Surat Keluar -->
 <div class="modal fade" id="modalBuatSurat" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
@@ -223,13 +224,14 @@
                     <h6 class="mb-3">Informasi Dasar Surat</h6>
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label for="jenis_surat" class="form-label">Jenis Surat <span class="text-danger">*</span></label>
-                            <select name="jenis_surat" id="jenis_surat" class="form-select" required>
-                                <option value="">-- Pilih Jenis Surat --</option>
-                                <option value="Surat Permohonan">Surat Permohonan</option>
-                                <option value="Surat Pemberitahuan">Surat Pemberitahuan</option>
-                                <option value="Surat Undangan">Surat Undangan</option>
-                                <option value="Surat Keterangan">Surat Keterangan</option>
+                            <label for="jenis_surat_id" class="form-label">Jenis Surat</label>
+                            <select class="form-select" name="jenis_surat_id" id="jenis_surat_id">
+                                <option value="">Pilih Jenis Surat</option>
+                                @foreach ($jenisSurat as $js)
+                                    <option value="{{ $js->id }}" {{ request('jenis_surat_id') == $js->id ? 'selected' : '' }}>
+                                        {{ $js->nama_jenis_surat }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -252,26 +254,26 @@
                         <div class="col-md-6">
                             <label for="jenis_alamat" class="form-label">Jenis Alamat</label>
                             <select name="jenis_alamat" id="jenis_alamat" class="form-select">
-                                <option value="">Pilih dari Master Data</option>
-                                <option value="Instansi">Instansi</option>
-                                <option value="Perusahaan">Perusahaan</option>
-                                <option value="Pribadi">Pribadi</option>
+                                <option value="">-- Pilih Alamat --</option>
+                                @foreach ($tujuanSurat->pluck('alamat')->unique() as $alamat)
+                                    <option value="{{ $alamat }}">{{ $alamat }}</option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="col-md-6">
                             <label for="tujuan" class="form-label">Tujuan Surat <span class="text-danger">*</span></label>
                             <select name="tujuan" id="tujuan" class="form-select" required>
-                                <option value="">-- Pilih Tujuan Surat --</option>
-                                <option value="PT Maju Jaya">PT Maju Jaya</option>
-                                <option value="Kepolisian Sektor Kota">Kepolisian Sektor Kota</option>
+                                <option value="">-- Pilih Instansi --</option>
+                                @foreach ($tujuanSurat->pluck('instansi')->unique() as $instansi)
+                                    <option value="{{ $instansi }}">{{ $instansi }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
-
                     <!-- Isi Surat -->
                     <div class="mb-3">
                         <label for="isi_surat" class="form-label">Isi Surat</label>
-                        <textarea name="isi_surat" id="isi_surat" class="form-control" rows="6" placeholder="Tulis isi surat disini..."></textarea>
+                        <textarea name="isi_surat" id="isi_surat" class="form-control" rows="6" placeholder="Tulis isi surat di sini..."></textarea>
                     </div>
                 </div>
 
@@ -285,70 +287,87 @@
 </div>
 
 
-
-
 @foreach($suratKeluar as $surat)
     {{-- Modal Edit --}}
-    <div class="modal fade" id="modalEditSurat{{ $surat->id }}" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <form action="{{ route('surat-keluar.update', $surat->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Surat: {{ $surat->nomor_surat }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body" style="max-height: 65vh; overflow-y: auto;">
-                    <div class="mb-3">
-                        <label for="nomor_surat_{{ $surat->id }}" class="form-label">Nomor Surat</label>
-                        <input type="text" name="nomor_surat" id="nomor_surat_{{ $surat->id }}" class="form-control" value="{{ $surat->nomor_surat }}" required>
+    <div class="modal fade" id="modalEditSurat{{ $surat->id }}" tabindex="-1" aria-labelledby="modalEditSuratLabel{{ $surat->id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form action="{{ route('surat-keluar.update', $surat->id) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalEditSuratLabel{{ $surat->id }}">Edit Surat: {{ $surat->nomor_surat }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3">
-                        <label for="tanggal_surat_{{ $surat->id }}" class="form-label">Tanggal Surat</label>
-                        <input type="date" name="tanggal_surat" id="tanggal_surat_{{ $surat->id }}" class="form-control" value="{{ $surat->tanggal_surat }}" required>
+                    <div class="modal-body" style="max-height: 65vh; overflow-y: auto;">
+                        <div class="mb-3">
+                            <label for="nomor_surat_{{ $surat->id }}" class="form-label">Nomor Surat</label>
+                            <input type="text" name="nomor_surat" id="nomor_surat_{{ $surat->id }}" class="form-control" value="{{ $surat->nomor_surat }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tanggal_surat_{{ $surat->id }}" class="form-label">Tanggal Surat</label>
+                            <input type="date" name="tanggal_surat" id="tanggal_surat_{{ $surat->id }}" class="form-control" value="{{ $surat->tanggal_surat }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jenis_surat_{{ $surat->id }}" class="form-label">Jenis Surat</label>
+                            <select name="jenis_surat" id="jenis_surat_{{ $surat->id }}" class="form-select" required>
+                                <option value="">Pilih Jenis</option>
+                                @foreach ($jenisSurat as $js)
+                                    <option value="{{ $js->nama_jenis_surat }}" {{ $surat->jenis_surat == $js->nama_jenis_surat ? 'selected' : '' }}>
+                                        {{ $js->nama_jenis_surat }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tujuan_{{ $surat->id }}" class="form-label">Tujuan</label>
+                            <select name="tujuan" id="tujuan_{{ $surat->id }}" class="form-select" required>
+                                <option value="">Pilih Tujuan</option>
+                                @foreach ($tujuanSurat as $mt)
+                                    <option value="{{ $mt->instansi }}" {{ $surat->instansi == $mt->instansi ? 'selected' : '' }}>
+                                        {{ $mt->instansi }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="alamat_{{ $surat->id }}" class="form-label">Alamat</label>
+                            <select name="alamat" id="alamat_{{ $surat->id }}" class="form-select" required>
+                                <option value="">Pilih Alamat</option>
+                                @foreach ($tujuanSurat as $mt)
+                                    <option value="{{ $mt->alamat }}" {{ $surat->alamat == $mt->alamat ? 'selected' : '' }}>
+                                        {{ $mt->alamat }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="perihal_{{ $surat->id }}" class="form-label">Perihal</label>
+                            <input type="text" name="perihal" id="perihal_{{ $surat->id }}" class="form-control" value="{{ $surat->perihal }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="isi_surat_{{ $surat->id }}" class="form-label">Isi Surat</label>
+                            <textarea name="isi_surat" id="isi_surat_{{ $surat->id }}" class="form-control" rows="6" required>{{ $surat->isi_surat }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="status_{{ $surat->id }}" class="form-label">Status</label>
+                            <select name="status" id="status_{{ $surat->id }}" class="form-select" required>
+                                <option value="Draft" {{ $surat->status == 'Draft' ? 'selected' : '' }}>Draft</option>
+                                <option value="Dikirim" {{ $surat->status == 'Dikirim' ? 'selected' : '' }}>Dikirim</option>
+                                <option value="Disetujui" {{ $surat->status == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
+                                <option value="Ditolak" {{ $surat->status == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="jenis_surat_{{ $surat->id }}" class="form-label">Jenis Surat</label>
-                        <select name="jenis_surat" id="jenis_surat_{{ $surat->id }}" class="form-select" required>
-                            <option value="">Pilih Jenis</option>
-                            <option value="Pengantar" {{ $surat->jenis_surat == 'Pengantar' ? 'selected' : '' }}>Pengantar</option>
-                            <option value="Pemberitahuan" {{ $surat->jenis_surat == 'Pemberitahuan' ? 'selected' : '' }}>Pemberitahuan</option>
-                            <option value="Undangan" {{ $surat->jenis_surat == 'Undangan' ? 'selected' : '' }}>Undangan</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="perihal_{{ $surat->id }}" class="form-label">Perihal</label>
-                        <input type="text" name="perihal" id="perihal_{{ $surat->id }}" class="form-control" value="{{ $surat->perihal }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="tujuan_{{ $surat->id }}" class="form-label">Tujuan</label>
-                        <input type="text" name="tujuan" id="tujuan_{{ $surat->id }}" class="form-control" value="{{ $surat->tujuan }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="isi_surat_{{ $surat->id }}" class="form-label">Isi Surat</label>
-                        <textarea name="isi_surat" id="isi_surat_{{ $surat->id }}" class="form-control" rows="6" required>{{ $surat->isi_surat }}</textarea>
-                    </div>
-                    <div class="col-md-6">
-                         <label for="status" class="form-label">Status</label>
-                         <select name="status" id="status" class="form-select">
-                         <option value="Draft" selected>Draft</option>
-                         <option value="Dikirim">Dikirim</option>
-                         <option value="Disetujui">Disetujui</option>
-                         <option value="Ditolak">Ditolak</option>
-                         </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 @endforeach
-
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

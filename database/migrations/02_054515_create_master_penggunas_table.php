@@ -12,16 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('master_penggunas', function (Blueprint $table) {
-            $table->id();
-            $table->integer('id_pengguna');
-            $table->string('nama_pengguna');
-            $table->string('jabatan');
-            $table->string('hak_akses');
-            $table->integer('id_departement');
-            $table->string('nama_pengirim');
-            $table->timestamps();
-        });
-    }
+        $table->id();
+        $table->integer('id_pengguna');
+        $table->string('nama_pengguna');
+        $table->string('jabatan');
+        $table->string('hak_akses');
+        
+        // Relasi ke master_departements
+        $table->unsignedBigInteger('id_departement');
+        $table->foreign('id_departement')->references('id')->on('master_departements')->onDelete('cascade');
+
+        // Tetap simpan nama_pengirim jika bukan relasi
+        $table->string('nama_pengirim');
+
+        $table->timestamps();
+    });
+        }
 
     /**
      * Reverse the migrations.

@@ -95,6 +95,28 @@
         <li class="nav-item">
           <a href="/" class="nav-link"><i class="bi bi-globe"></i> Dashboard</a>
         </li>
+
+        @php
+            use Illuminate\Support\Facades\Auth;
+        @endphp
+
+        @if(Auth::check() && Auth::user()->level !== 'operator')
+          <li class="nav-item">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="collapse" data-bs-target="#masterDataMenu" aria-expanded="false">
+              <i class="bi bi-database"></i> Master Data
+            </a>
+            <div class="collapse" id="masterDataMenu">
+              <ul class="list-unstyled fw-normal pb-1 small ps-1">
+                <li><a href="/departement" class="nav-link">Master Departemen</a></li>
+                <li><a href="/pengguna" class="nav-link">Master Pengguna</a></li>
+                <li><a href="/jenis-surat" class="nav-link">Master Jenis Surat</a></li>
+                <li><a href="/tujuan-surat" class="nav-link">Master Tujuan Surat</a></li>
+                <li><a href="/dokumen-proyek" class="nav-link">Master Dokumen Proyek</a></li>
+              </ul>
+            </div>
+          </li>
+        @endif
+
         <li class="nav-item">
           <a href="/suratKeluar" class="nav-link"><i class="bi bi-envelope"></i> Surat Keluar</a>
         </li>
@@ -105,10 +127,19 @@
           <a href="/monitoringProyek" class="nav-link"><i class="bi bi-kanban"></i> Monitoring Proyek</a>
         </li>
         <li class="nav-item">
-          <a href="/laporan" class="nav-link"><i class="bi bi-file-earmark-text"></i> Laporan</a>
+          <a href="/Detail" class="nav-link"><i class="bi bi-file-earmark-text"></i> Detail</a>
         </li>
-        <li class="nav-item">
+        
+        @if(Auth::check() && Auth::user()->level !== 'operator')
+          <li class="nav-item">
           <a href="/pengaturan" class="nav-link"><i class="bi bi-gear"></i> Pengaturan</a>
+        </li>
+        @endif
+        {{-- Tambah menu ubah password hanya untuk operator --}}
+        <li class="nav-item">
+            <a href="{{ route('ubah-password.form') }}" class="nav-link">
+                <i class="bi bi-key"></i> Ubah Password
+            </a>
         </li>
       </ul>
     </div>

@@ -13,8 +13,8 @@
             <div class=" mx-auto my-5 row col-9" >
                 <div>
                     <div class="col-md-12 text-center mt-3">
-                        <h1 class="display-12">Selamat Datang!</h1>
-                        <p class="lead">Di Dashboard Admin</p>
+                        <h1 class="display-12">Selamat Datang, {{ Auth::user()->name }}!</h1>
+                        <p class="lead">Di Dashboard {{ ucfirst(Auth::user()->level) }}</p>
                     </div>
                     <div class="info-box mt-5 ml-4">
                         <div class="row mt-5">

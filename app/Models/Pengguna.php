@@ -2,26 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
 
-class Pengguna extends Authenticatable
+class Pengguna extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+
+    protected $table = 'master_penggunas';
 
     protected $fillable = [
+        'id_pengguna',
         'nama_pengguna',
-        'name',
-        'position',
-        'role',
-        'email',
-        'password',
+        'jabatan',
+        'hak_akses',
+        'id_departement',
+        'nama_pengirim',
     ];
 
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    public function departement()
+{
+    return $this->belongsTo(Departement::class, 'id_departement');
+}
+
 }

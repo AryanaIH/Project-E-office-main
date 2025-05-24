@@ -44,13 +44,8 @@
 <div class="wrapper">
   <!-- Sidebar -->
   <div class="sidebar">
-    @if (Auth::check() && Auth::user()->role === 'Admin')
-        @include('layout.Adminnavbar')
-    @elseif (Auth::check() && Auth::user()->role === 'Operator')
-        @include('layout.Operatornavbar')
-    @endif
-</div>
-
+    @include('layout.navbar')
+  </div>
 
   <!-- Konten utama scrollable -->
   <div class="content">

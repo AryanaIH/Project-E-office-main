@@ -11,30 +11,30 @@ return new class extends Migration
      */
     public function up(): void
     {
-                Schema::create('surat_keluar', function (Blueprint $table) {
-                    $table->id();
-                    $table->string('nomor_surat');
-                    
-                    // ganti string menjadi relasi ID
-                    $table->foreignId('jenis_surat_id')->constrained('jenis_surat')->onDelete('cascade');
-                    $table->date('tanggal_surat');
-                    $table->string('perihal');
-                    $table->string('tujuan');
-                    $table->text('isi_surat');
-                    $table->string('status')->default('Terkirim');
-                    $table->timestamps();
-        });
+        Schema::create('surat_keluar', function (Blueprint $table) {
+            $table->id();
+            $table->string('nomor_surat');
 
-        
-        
+            // Foreign key ke tabel jenis_surat
+            $table->foreignId('jenis_surat_id')
+                ->constrained('jenis_surat')
+                ->onDelete('cascade');
+
+            $table->date('tanggal_surat');
+            $table->string('perihal');
+            $table->string('tujuan');
+            $table->string('alamat')->nullable(); // kolom alamat, boleh nullable jika ingin
+            $table->text('isi_surat');
+            $table->string('status')->default('Terkirim');
+            $table->timestamps();
+        });
     }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
-{
-    Schema::dropIfExists('surat_keluar');
-}
-
+    {
+        Schema::dropIfExists('surat_keluar');
+    }
 };

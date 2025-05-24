@@ -48,14 +48,13 @@
 <div class="wrapper">
   <!-- Sidebar -->
   <div class="sidebar">
-    @include('layout.Adminnavbar')
+    @include('layout.navbar')
   </div>
 
   <!-- Konten utama -->
   <div class="content">
     <div class="content-inner">
 
-      <!-- Header -->
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold m-0">Master Dokumen Proyek</h5>
         <div class="d-flex align-items-center">
@@ -66,7 +65,6 @@
 
       <hr class="mb-4 mt-2">
 
-      <!-- Breadcrumb -->
       <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb bg-body-tertiary p-2 rounded">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -74,7 +72,6 @@
         </ol>
       </nav>
 
-      <!-- Form Dokumen Proyek -->
       <div class="card shadow-sm mb-5">
         <div class="card-body">
           <h4 class="card-title text-center mb-4">
@@ -88,18 +85,35 @@
               @method('PUT')
             @endif
 
+            {{-- ID Dokumen --}}
+            <div class="mb-3">
+              <label for="id_dokumen" class="form-label">ID Dokumen</label>
+              <input type="text" class="form-control" name="id_dokumen"
+                     value="{{ old('id_dokumen', $dokumen->id_dokumen ?? '') }}"
+                     {{ isset($dokumen) ? 'readonly' : '' }}
+                     required placeholder="Contoh: DOC-001">
+              @error('id_dokumen')
+                <div class="text-danger small">{{ $message }}</div>
+              @enderror
+            </div>
+
+            {{-- Jenis Surat --}}
             <div class="mb-3">
               <label for="jenis_surat_id" class="form-label">Jenis Surat</label>
-<select class="form-select" name="jenis_surat_id" required>
-  <option disabled {{ !isset($dokumen) ? 'selected' : '' }}>-- Pilih Jenis Surat --</option>
-  @foreach($jenisSurat as $jenis)
-    <option value="{{ $jenis->id }}" {{ (old('jenis_surat_id', $dokumen->jenis_surat_id ?? '') == $jenis->id) ? 'selected' : '' }}>
-      {{ $jenis->nama_jenis_surat }}
-    </option>
-  @endforeach
-</select>
+              <select class="form-select" name="jenis_surat_id" required>
+                <option disabled {{ !isset($dokumen) ? 'selected' : '' }}>-- Pilih Jenis Surat --</option>
+                @foreach($jenisSurat as $jenis)
+                  <option value="{{ $jenis->id }}" {{ (old('jenis_surat_id', $dokumen->jenis_surat_id ?? '') == $jenis->id) ? 'selected' : '' }}>
+                    {{ $jenis->nama_jenis_surat }}
+                  </option>
+                @endforeach
+              </select>
+              @error('jenis_surat_id')
+                <div class="text-danger small">{{ $message }}</div>
+              @enderror
+            </div>
 
-        </div>
+            {{-- Template Dokumen --}}
             <div class="mb-3">
               <label for="template_dokumen" class="form-label">Template Dokumen</label>
               <input type="file" class="form-control" name="template_dokumen">
@@ -111,30 +125,32 @@
                   </a>
                 </small>
               @endif
+              @error('template_dokumen')
+                <div class="text-danger small">{{ $message }}</div>
+              @enderror
             </div>
 
+            {{-- Approval --}}
             <div class="mb-4">
               <label for="approval" class="form-label">Persyaratan Approval</label>
               <input type="text" class="form-control" name="approval"
                      value="{{ old('approval', $dokumen->approval ?? '') }}"
                      placeholder="Contoh: Manajer Proyek, Direktur">
+              @error('approval')
+                <div class="text-danger small">{{ $message }}</div>
+              @enderror
             </div>
 
             <div class="d-flex flex-wrap gap-2">
               <button type="submit" class="btn btn-success">
                 {{ isset($dokumen) ? 'Update' : 'Simpan' }}
               </button>
-              @if(isset($dokumen))
-                <a href="{{ route('dokumen-proyek.index') }}" class="btn btn-secondary">Batal</a>
-              @else
-                <a href="{{ route('dokumen-proyek.index') }}" class="btn btn-primary">Tampilkan</a>
-              @endif
+              <a href="{{ route('dokumen-proyek.index') }}" class="btn btn-secondary">Batal</a>
             </div>
           </form>
         </div>
       </div>
 
-      <!-- Tabel Dokumen Proyek -->
       <div class="card">
         <div class="card-body">
           <h5 class="card-title mb-3">Data Dokumen Proyek</h5>
@@ -187,9 +203,9 @@
         </div>
       </div>
 
-    </div> <!-- end content-inner -->
-  </div> <!-- end content -->
-</div> <!-- end wrapper -->
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
