@@ -308,23 +308,25 @@
                             <label for="tanggal_surat_{{ $surat->id }}" class="form-label">Tanggal Surat</label>
                             <input type="date" name="tanggal_surat" id="tanggal_surat_{{ $surat->id }}" class="form-control" value="{{ $surat->tanggal_surat }}" required>
                         </div>
+                       {{-- Jenis Surat --}}
                         <div class="mb-3">
-                            <label for="jenis_surat_{{ $surat->id }}" class="form-label">Jenis Surat</label>
-                            <select name="jenis_surat" id="jenis_surat_{{ $surat->id }}" class="form-select" required>
+                            <label for="jenis_surat_id_{{ $surat->id }}" class="form-label">Jenis Surat</label>
+                            <select name="jenis_surat_id" id="jenis_surat_id_{{ $surat->id }}" class="form-select" required>
                                 <option value="">Pilih Jenis</option>
                                 @foreach ($jenisSurat as $js)
-                                    <option value="{{ $js->nama_jenis_surat }}" {{ $surat->jenis_surat == $js->nama_jenis_surat ? 'selected' : '' }}>
+                                    <option value="{{ $js->id }}" {{ $surat->jenis_surat_id == $js->id ? 'selected' : '' }}>
                                         {{ $js->nama_jenis_surat }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
+                        {{-- Tujuan --}}
                         <div class="mb-3">
                             <label for="tujuan_{{ $surat->id }}" class="form-label">Tujuan</label>
                             <select name="tujuan" id="tujuan_{{ $surat->id }}" class="form-select" required>
                                 <option value="">Pilih Tujuan</option>
                                 @foreach ($tujuanSurat as $mt)
-                                    <option value="{{ $mt->instansi }}" {{ $surat->instansi == $mt->instansi ? 'selected' : '' }}>
+                                    <option value="{{ $mt->instansi }}" {{ $surat->tujuan == $mt->instansi ? 'selected' : '' }}>
                                         {{ $mt->instansi }}
                                     </option>
                                 @endforeach

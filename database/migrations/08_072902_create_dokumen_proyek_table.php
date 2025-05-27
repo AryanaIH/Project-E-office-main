@@ -5,19 +5,16 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void
-    {
-        Schema::create('dokumen_proyek', function (Blueprint $table) {
-        $table->string('id_dokumen', 255)->primary();
-        $table->string('template_dokumen')->nullable();  // path file
-        $table->unsignedBigInteger('jenis_surat_id');
-        $table->string('approval')->nullable();
+   public function up()
+{
+    Schema::create('dokumen_proyeks', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('pra_proyek_id')->constrained('pra_proyeks')->onDelete('cascade');
+        $table->string('jenis_dokumen'); // e.g. surat_permohonan
+        $table->string('nama_file'); // nama file tersimpan
         $table->timestamps();
-
-        $table->foreign('jenis_surat_id')->references('id')->on('jenis_surat')->onDelete('cascade');
     });
-
-    }
+}
 
     public function down(): void
     {

@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 class MonitoringController extends Controller
 {
-    public function monitoring()
+    public function PraProyek()
     {
         $praProyeks = PraProyek::all();
-        return view('monitoring', compact('praProyeks'));
+        return view('monitoringProyek', compact('praProyeks'));
     }
 }

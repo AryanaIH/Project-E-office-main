@@ -9,6 +9,7 @@ use App\Http\Controllers\TujuanSuratController;
 use App\Http\Controllers\DokumenProyekController;
 use App\Http\Controllers\pengaturanController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MonitoringController;
 
 
 
@@ -57,13 +58,14 @@ Route::get('/dokumen-proyek', function () {
     return view('dokumen-proyek');
 });
 
-Route::get('/monitoringProyek', function () {
-    return view('monitoringProyek');
-});
 
-Route::get('/Detail', function () {
-    return view('Detail');
-});
+Route::get('/monitoringProyek', [MonitoringController::class, 'PraProyek']);
+
+
+use App\Http\Controllers\DetailController;
+
+Route::get('/detail/{id}', [DetailController::class, 'show'])->name('detail.show');
+
 
 Route::get('/pengaturan', function () {
     return view('pengaturan');
@@ -88,21 +90,24 @@ Route::get('/surat-keluar/{id}/preview', [SuratKeluarController::class, 'preview
 
 use App\Http\Controllers\PraProyekController;
 
-// Halaman utama daftar pra-proyek
-Route::get('/pra-proyek', [PraProyekController::class, 'index'])->name('pra-proyek.index');
-
-// Proses tambah data
-Route::post('/pra-proyek', [PraProyekController::class, 'store'])->name('pra-proyek.store');
-
-// Form edit pra-proyek
-Route::get('/pra-proyek/{id}/edit', [PraProyekController::class, 'edit'])->name('pra-proyek.edit');
-
-// Proses update data
-Route::put('/pra-proyek/{id}', [PraProyekController::class, 'update'])->name('pra-proyek.update');
-
-// Proses hapus data
+Route::get('/pra-proyek', [PraProyekController::class, 'index'])->name('pra-proyek');
+Route::post('/pra-proyek/store', [PraProyekController::class, 'store'])->name('pra-proyek.store');
 Route::delete('/pra-proyek/{id}', [PraProyekController::class, 'destroy'])->name('pra-proyek.destroy');
+Route::get('/pra-proyek/{id}/edit', [PraProyekController::class, 'edit'])->name('pra-proyek.edit');
+Route::put('/pra-proyek/{id}', [PraProyekController::class, 'update'])->name('pra-proyek.update');
+Route::post('/pra-proyek/dokumen', [PraProyekController::class, 'storeDokumen'])->name('pra-proyek.storeDokumen');
 
+
+
+
+
+use App\Http\Controllers\MasterProyekController;
+
+Route::get('/masterProyek', [MasterProyekController::class, 'index'])->name('master-proyek.index');
+Route::post('/masterProyek', [MasterProyekController::class, 'store'])->name('master-proyek.store');
+Route::get('/masterProyek/{id}/edit', [MasterProyekController::class, 'edit'])->name('master-proyek.edit');
+Route::put('/masterProyek/{id}', [MasterProyekController::class, 'update'])->name('master-proyek.update');
+Route::delete('/masterProyek/{id}', [MasterProyekController::class, 'destroy'])->name('master-proyek.destroy');
 
 
 
@@ -140,10 +145,6 @@ Route::resource('dokumen-proyek', DokumenProyekController::class);
 
 
 
-use App\Http\Controllers\MonitoringController;
-
-Route::get('/monitoring', [MonitoringController::class, 'monitoring'])->name('monitoring');
-
 use App\Http\Controllers\ImageController;
 
 Route::get('/upload', function () {
@@ -161,3 +162,10 @@ Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengatu
 Route::post('/pengaturan', [PengaturanController::class, 'store'])->name('pengaturan.store');
 Route::put('/pengaturan/{id}', [PengaturanController::class, 'update'])->name('pengaturan.update');
 Route::delete('/pengaturan/{id}', [PengaturanController::class, 'destroy'])->name('pengaturan.destroy');
+
+
+Route::get('/pra-proyek/{id}', [PraProyekController::class, 'detail'])->name('pra-proyek.detail');
+Route::post('/pra-proyek/upload-dokumen', [PraProyekController::class, 'storeDokumen'])->name('pra-proyek.storeDokumen');
+
+
+Route::get('/pra-proyek/{id}/dokumen-status', [PraProyekController::class, 'getDokumenStatus']);

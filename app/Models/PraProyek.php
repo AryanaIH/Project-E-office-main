@@ -9,19 +9,32 @@ class PraProyek extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'kode_proyek',
-        'nama_proyek',
-        'klient',
-        'lokasi',
-        'jenis_proyek',
-        'tanggal_mulai',
-        'tanggal_selesai',
-        'status',
-    ];
+    protected $table = 'pra_proyeks';
 
-    protected $casts = [
-        'tanggal_mulai' => 'datetime',
-        'tanggal_selesai' => 'datetime',
-    ];
+    protected $fillable = [
+    'nama_proyek',
+    'tanggal_mulai',
+    'tanggal_selesai',
+    'client',
+    'status_proyek',
+    'surat_permohonan',
+    'rab',
+    'dokumen_teknis',
+    'proposal_teknis',
+    'izin_lokasi',
+    'kontrak_kerja',
+];
+
+    public function dokumenProyeks()
+{
+    return $this->hasMany(DokumenProyek::class);
 }
+// app/Models/PraProyek.php
+public function dokumen()
+{
+    return $this->hasMany(DokumenProyek::class, 'pra_proyek_id');
+}
+
+
+}
+

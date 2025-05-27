@@ -6,28 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
         Schema::create('pra_proyeks', function (Blueprint $table) {
             $table->id();
+
+            // Menyesuaikan kolom dengan master_proyeks tapi dengan nama berbeda
             $table->string('nama_proyek');
-            $table->string('klient')->nullable(); // Menambahkan kolom 'klient'
-            $table->string('lokasi')->nullable(); // Menambahkan kolom 'lokasi'
-            $table->string('jenis_proyek')->nullable(); // Menambahkan kolom 'jenis_proyek'
-            $table->date('tanggal_mulai')->nullable(); // Menambahkan kolom 'tanggal_mulai'
-            $table->date('tanggal_selesai')->nullable(); // Menambahkan kolom 'tanggal_selesai'
-            $table->string('status')->nullable(); // Menambahkan kolom 'status'
+            $table->string('client')->nullable();       // dari 'client' di master_proyeks
+            $table->string('lokasi_proyek')->nullable();       // dari 'lokasi_proyek' di master_proyeks
+            $table->string('jenis_proyek')->nullable();
+            $table->date('tanggal_mulai')->nullable();
+            $table->date('tanggal_selesai')->nullable();
+            $table->string('status_proyek')->nullable();       // dari 'status_proyek' di master_proyeks
+            
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('pra_proyeks');
     }

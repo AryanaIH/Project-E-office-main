@@ -30,9 +30,6 @@
       padding: 2rem;
       background-color: #f5f5f5;
     }
-    .content-inner {
-      min-height: 100%;
-    }
     .progress-bar {
       height: 6px;
       border-radius: 4px;
@@ -55,109 +52,125 @@
   </div>
 
   <div class="content">
-    <div class="content-inner">
-      <h4 class="mb-4 fw-bold">Daftar Monitoring Proyek</h4>
+    <h4 class="mb-4 fw-bold">Daftar Monitoring Proyek</h4>
 
-      <!-- Filter -->
-      <div class="row g-2 align-items-end mb-4">
-        <div class="col-md-2">
-          <label>Status</label>
-          <select class="form-select" id="filter-status">
-            <option value="">Semua Status</option>
-            <option value="On Track">On Track</option>
-            <option value="Terlambat">Terlambat</option>
-            <option value="Selesai">Selesai</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <label>Client</label>
-          <select class="form-select" id="filter-klien">
-            <option value="">Semua Client</option>
-            <option value="PT Maju Bersama">PT Maju Bersama</option>
-            <option value="PT ABC">PT ABC</option>
-          </select>
-        </div>
-        <div class="col-md-2">
-          <label>Tanggal Mulai</label>
-          <input type="date" class="form-control" id="filter-mulai">
-        </div>
-        <div class="col-md-2">
-          <label>Tanggal Selesai</label>
-          <input type="date" class="form-control" id="filter-selesai">
-        </div>
-        <div class="col-md-3">
-          <label>Cari proyek...</label>
-          <input type="text" class="form-control" placeholder="Cari proyek..." id="filter-keyword">
-        </div>
-        <div class="col-md-1 text-end">
-          <button class="btn btn-primary w-100" id="filter-btn"><i class="bi bi-funnel-fill"></i></button>
-        </div>
+    <!-- Filter -->
+    <div class="row g-2 align-items-end mb-4">
+      <div class="col-md-2">
+        <label>Status</label>
+        <select class="form-select" id="filter-status">
+          <option value="">Semua Status</option>
+          <option value="On Track">On Track</option>
+          <option value="Terlambat">Terlambat</option>
+          <option value="Selesai">Selesai</option>
+        </select>
       </div>
+      <div class="col-md-2">
+        <label>Client</label>
+        <select class="form-select" id="filter-klien">
+          <option value="">Semua Client</option>
+          <option value="PT Maju Bersama">PT Maju Bersama</option>
+          <option value="PT ABC">PT ABC</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label>Tanggal Mulai</label>
+        <input type="date" class="form-control" id="filter-mulai">
+      </div>
+      <div class="col-md-2">
+        <label>Tanggal Selesai</label>
+        <input type="date" class="form-control" id="filter-selesai">
+      </div>
+      <div class="col-md-3">
+        <label>Cari proyek...</label>
+        <input type="text" class="form-control" placeholder="Cari proyek..." id="filter-keyword">
+      </div>
+      <div class="col-md-1 text-end">
+        <button class="btn btn-primary w-100" id="filter-btn"><i class="bi bi-funnel-fill"></i></button>
+      </div>
+    </div>
 
-      <!-- Tabel -->
-      <div class="table-responsive">
-        <table class="table" id="project-table">
-          <thead>
-            <tr>
-              <th>Nama Proyek</th>
-              <th>Mulai</th>
-              <th>Selesai</th>
-              <th>Klien</th>
-              <th>Status</th>
-              <th>Progress</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="project-table-body">
-            <tr>
-              <td>Pengembangan Sistem ERP</td>
-              <td>2025-01-10</td>
-              <td>2025-07-20</td>
-              <td>PT Maju Bersama</td>
-              <td><span class="badge bg-success">On Track</span></td>
+    <!-- Tabel -->
+    <div class="table-responsive mb-3">
+      <table class="table" id="project-table">
+        <thead>
+          <tr>
+            <th>Nama Proyek</th>
+            <th>Mulai</th>
+            <th>Selesai</th>
+            <th>Klien</th>
+            <th>Status</th>
+            <th>File</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="project-table-body">
+          @foreach($praProyeks as $proyek)
+            <tr data-visible="true">
+              <td>{{ $proyek->nama_proyek }}</td>
+              <td>{{ $proyek->tanggal_mulai }}</td>
+              <td>{{ $proyek->tanggal_selesai }}</td>
+              <td>{{ $proyek->client }}</td>
               <td>
-                12 / 18 syarat
+                @php
+                  $status = strtolower($proyek->status_proyek);
+                  $badgeClass = match ($status) {
+                    'on track' => 'bg-success',
+                    'terlambat' => 'bg-warning',
+                    'selesai' => 'bg-primary',
+                    default => 'bg-secondary'
+                  };
+                @endphp
+                <span class="badge {{ $badgeClass }}">{{ $proyek->status_proyek }}</span>
+              </td>
+              <td>
+                @php
+                  $docs = [
+                    'surat_permohonan',
+                    'rab',
+                    'dokumen_teknis',
+                    'proposal_teknis',
+                    'izin_lokasi',
+                    'kontrak_kerja',
+                  ];
+                  $totalDocs = count($docs);
+                  $uploadedCount = 1;
+
+                  foreach ($docs as $docKey) {
+                    if (!empty($proyek->$docKey)) {
+                      $uploadedCount++;
+                    }
+                  }
+
+                  $progressPercent = ($uploadedCount / $totalDocs) * 100;
+                  $progressBarClass = $progressPercent == 100 ? 'bg-success' : 'bg-secondary';
+                @endphp
+                {{ $uploadedCount }} / {{ $totalDocs }} syarat
                 <div class="progress mt-1">
-                  <div class="progress-bar bg-primary" style="width: 66.7%"></div>
+                  <div class="progress-bar {{ $progressBarClass }}" style="width: {{ $progressPercent }}%"></div>
                 </div>
               </td>
               <td>
-              <a href="/Detail" class="btn btn-sm btn-primary">Detail</a>
+                <a href="{{ url('/detail/'.$proyek->id) }}" class="btn btn-sm btn-primary">Detail</a>
               </td>
             </tr>
-            <tr>
-              <td>Aplikasi Inventory</td>
-              <td>2025-02-01</td>
-              <td>2025-06-30</td>
-              <td>PT ABC</td>
-              <td><span class="badge bg-warning">Terlambat</span></td>
-              <td>
-                5 / 10 syarat
-                <div class="progress mt-1">
-                  <div class="progress-bar bg-warning" style="width: 50%"></div>
-                </div>
-              </td>
-              <td>
-              <a href="/laporan" class="btn btn-sm btn-primary">Detail</a>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
 
-      <!-- Pagination -->
-      <div class="d-flex justify-content-center mt-3">
-        <nav>
-          <ul class="pagination" id="pagination"></ul>
-        </nav>
-      </div>
-
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center">
+      <nav>
+        <ul class="pagination" id="pagination"></ul>
+      </nav>
     </div>
   </div>
 </div>
 
+<!-- Scripts -->
 <script>
-  const rowsPerPage = 1;
+  const rowsPerPage = 10;
   let currentPage = 1;
 
   function showPage(page) {
@@ -218,7 +231,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    // Set all rows visible initially
     document.querySelectorAll('#project-table-body tr:not(.detail-row)').forEach(row => {
       row.dataset.visible = "true";
     });
@@ -247,28 +259,6 @@
       });
 
       showPage(1);
-    });
-
-    document.getElementById('project-table-body').addEventListener('click', function (e) {
-      if (e.target.closest('.detail-btn')) {
-        e.preventDefault();
-        const btn = e.target.closest('.detail-btn');
-        const detailText = btn.getAttribute('data-detail');
-        const existingDetailRow = this.querySelector('.detail-row');
-        if (existingDetailRow) existingDetailRow.remove();
-
-        const currentRow = btn.closest('tr');
-        const detailRow = document.createElement('tr');
-        detailRow.classList.add('detail-row');
-        detailRow.innerHTML = `
-          <td colspan="7">
-            <div class="p-3 bg-light border rounded">
-              <strong>Detail Proyek:</strong>
-              <p>${detailText}</p>
-            </div>
-          </td>`;
-        currentRow.insertAdjacentElement('afterend', detailRow);
-      }
     });
 
     showPage(1);

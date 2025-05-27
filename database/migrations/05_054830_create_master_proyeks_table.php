@@ -11,17 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('master_proyeks', function (Blueprint $table) {
-            $table->id();
-            $table->integer('id_proyek');
-            $table->string('nama_proyek');
-            $table->string('client');
-            $table->string('lokasi_proyek');
-            $table->string('jenis_proyek');
-            $table->integer('tanggal_mulai_selesai');
-            $table->string('status_proyek');
-            $table->timestamps();
-        });
+       Schema::create('master_proyeks', function (Blueprint $table) {
+        $table->id();
+        $table->integer('id_proyek');
+        $table->string('nama_proyek');
+        $table->string('client');
+        $table->string('lokasi_proyek');
+        $table->string('jenis_proyek');
+        $table->date('tanggal_mulai');
+        $table->date('tanggal_selesai');
+        $table->string('status_proyek');
+        $table->timestamps();
+});
     }
 
     /**

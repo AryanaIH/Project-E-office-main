@@ -111,6 +111,7 @@
                 <li><a href="/pengguna" class="nav-link">Master Pengguna</a></li>
                 <li><a href="/jenis-surat" class="nav-link">Master Jenis Surat</a></li>
                 <li><a href="/tujuan-surat" class="nav-link">Master Tujuan Surat</a></li>
+                <li><a href="/masterProyek" class="nav-link">Master Proyek</a></li>
                 <li><a href="/dokumen-proyek" class="nav-link">Master Dokumen Proyek</a></li>
               </ul>
             </div>

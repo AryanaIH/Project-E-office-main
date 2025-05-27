@@ -2,26 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class DokumenProyek extends Model
 {
-    protected $table = 'dokumen_proyek';
-    protected $primaryKey = 'id_dokumen';
-    public $incrementing = false; // Karena id_dokumen string, bukan auto increment
-    protected $keyType = 'string';
+    use HasFactory;
 
     protected $fillable = [
-        'id_dokumen',
-        'jenis_surat_id',
-        'template_dokumen',  // path file string
-        'approval',
+        'pra_proyek_id',
+        'jenis_dokumen',
+        'nama_file',
     ];
 
-    public function jenisSurat()
+    public function praProyek()
     {
-        return $this->belongsTo(JenisSurat::class, 'jenis_surat_id');
+        return $this->belongsTo(PraProyek::class);
     }
-
-    // HAPUS fungsi berkas() karena tidak sesuai
+    
 }
