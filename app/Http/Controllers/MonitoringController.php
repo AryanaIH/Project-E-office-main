@@ -10,6 +10,8 @@ class MonitoringController extends Controller
     public function PraProyek()
     {
         $praProyeks = PraProyek::all();
-        return view('monitoringProyek', compact('praProyeks'));
+        $klienList = PraProyek::select('client')->distinct()->pluck('client');
+
+        return view('monitoringProyek', compact('praProyeks', 'klienList'));
     }
 }

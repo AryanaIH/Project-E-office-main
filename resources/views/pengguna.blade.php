@@ -51,8 +51,6 @@
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold m-0">Master Pengguna</h5>
         <div class="d-flex align-items-center">
-          <img src="{{ asset('img/user-icon.png') }}" alt="User Icon" width="20" class="me-2" />
-          <span>Admin User</span>
         </div>
       </div>
 

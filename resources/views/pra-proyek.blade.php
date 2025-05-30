@@ -64,12 +64,11 @@
     @endif
 
     <!-- Tombol Tambah -->
-    <div class="mb-3 d-flex justify-content-start flex-wrap gap-2">
+    <div class="mb-3 d-flex justify-content-end flex-wrap gap-2">
       <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalTambah">
         <i class="bi bi-plus-lg"></i> Tambah Pra-Proyek
       </button>
     </div>
-
     <!-- Modal Tambah -->
 <div class="modal fade" id="modalTambah" tabindex="-1" aria-labelledby="modalTambahLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -227,6 +226,53 @@
     </div>
   </div>
 </div>
+
+<!-- Filter -->
+           <form method="GET" action="{{ route('pra-proyek.index') }}">
+    <div class="row g-2 mb-3 align-items-end">
+        <div class="col-md-2">
+            <label for="status_proyek" class="form-label">Status Proyek</label>
+            <select class="form-select" name="status_proyek" id="status_proyek">
+                <option value="">Semua Status</option>
+                <option value="Baru" {{ request('status_proyek') == 'Baru' ? 'selected' : '' }}>Baru</option>
+                <option value="Berjalan" {{ request('status_proyek') == 'Berjalan' ? 'selected' : '' }}>Berjalan</option>
+                <option value="Selesai" {{ request('status_proyek') == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                <option value="Ditolak" {{ request('status_proyek') == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
+                <option value="Disetujui" {{ request('status_proyek') == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label for="tanggal_mulai" class="form-label">Tanggal Mulai</label>
+            <input type="date" class="form-control" name="tanggal_mulai" id="tanggal_mulai" value="{{ request('tanggal_mulai') }}">
+        </div>
+
+        <div class="col-md-2">
+            <label for="tanggal_selesai" class="form-label">Tanggal Selesai</label>
+            <input type="date" class="form-control" name="tanggal_selesai" id="tanggal_selesai" value="{{ request('tanggal_selesai') }}">
+        </div>
+
+        <div class="col-md-2">
+            <label for="jenis_proyek" class="form-label">Jenis Proyek</label>
+            <select class="form-select" name="jenis_proyek" id="jenis_proyek">
+                <option value="">Semua Jenis</option>
+                <option value="Konstruksi" {{ request('jenis_proyek') == 'Konstruksi' ? 'selected' : '' }}>Konstruksi</option>
+                <option value="IT" {{ request('jenis_proyek') == 'IT' ? 'selected' : '' }}>IT</option>
+                <option value="Pengadaan" {{ request('jenis_proyek') == 'Pengadaan' ? 'selected' : '' }}>Pengadaan</option>
+                <option value="Lainnya" {{ request('jenis_proyek') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label for="search" class="form-label">Pencarian</label>
+            <input type="text" class="form-control" name="search" id="search" placeholder="Cari nama proyek, client, lokasi..." value="{{ request('search') }}">
+        </div>
+
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+</form>
 
 
     <!-- Tabel Daftar Pra-Proyek -->

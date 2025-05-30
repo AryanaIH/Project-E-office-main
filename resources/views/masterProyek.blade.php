@@ -49,8 +49,6 @@
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="fw-bold m-0">Master Proyek</h5>
         <div class="d-flex align-items-center">
-          <img src="{{ asset('img/user-icon.png') }}" alt="User Icon" width="20" class="me-2" />
-          <span>Admin</span>
         </div>
       </div>
 
@@ -126,11 +124,11 @@
               <select class="form-select" name="status_proyek" id="status_proyek" required>
                 @php
                   $statusOptions = [
-                    'terkirim' => 'Terkirim',
-                    'menunggu persetujuan' => 'Menunggu Persetujuan',
-                    'draft' => 'Draft',
-                    'disetujui' => 'Disetujui',
+                    'baru' => 'Baru',
+                    'berjalan' => 'Berjalan',
+                    'selesai' => 'Selesai',
                     'ditolak' => 'Ditolak',
+                    'disetujui' => 'Disetujui',
                   ];
                   $selectedStatus = old('status_proyek', $editData->status_proyek ?? '');
                 @endphp

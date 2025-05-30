@@ -8,16 +8,15 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <style>
     body, html {
+      height: 100%;
       margin: 0;
       padding: 0;
-      height: 100%;
-      overflow: hidden;
-      background-color: #f8f9fa;
     }
 
     .wrapper {
       display: flex;
       height: 100vh;
+      overflow: hidden;
     }
 
     .sidebar {
@@ -31,7 +30,8 @@
     .content {
       flex-grow: 1;
       overflow-y: auto;
-      padding: 1.5rem;
+      padding: 2rem;
+      background-color: #f5f5f5;
     }
 
     .project-header {
@@ -73,91 +73,102 @@
 
   <!-- Content -->
   <div class="content">
-    <div class="content-inner">
-      <h4 class="mb-4 fw-bold">Detail Proyek</h4>
+    <h4 class="mb-4 fw-bold">Detail Proyek</h4>
 
-      <!-- Project Header -->
-      <div class="project-header">
-        <div class="row">
-          <div class="col-md-8">
-            <h5 class="fw-bold">
-              {{ $proyek->nama_proyek }}
-              <span class="badge 
-                @if(strtolower($proyek->status_proyek) === 'at risk') bg-warning text-dark
-                @elseif(strtolower($proyek->status_proyek) === 'on track') bg-success
-                @elseif(strtolower($proyek->status_proyek) === 'terlambat') bg-danger
-                @else bg-secondary
-                @endif ms-2">
-                {{ $proyek->status_proyek }}
-              </span>
-            </h5>
+      <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/monitoringProyek">Monitoring Proyek</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Detail Proyek</li>
+    </ol>
+  </nav>
+  <!-- Tombol Kembali -->
+  <div class="mb-4">
+    <a href="/monitoringProyek" class="btn btn-secondary">
+      <i class="bi bi-arrow-left"></i> Kembali ke Monitoring Proyek
+    </a>
+  </div>
+    <!-- Project Header -->
+    <div class="project-header">
+      <div class="row">
+        <div class="col-md-8">
+          <h5 class="fw-bold">
+            {{ $proyek->nama_proyek }}
+            <span class="badge 
+              @if(strtolower($proyek->status_proyek) === 'at risk') bg-warning text-dark
+              @elseif(strtolower($proyek->status_proyek) === 'on track') bg-success
+              @elseif(strtolower($proyek->status_proyek) === 'terlambat') bg-danger
+              @else bg-secondary
+              @endif ms-2">
+              {{ $proyek->status_proyek }}
+            </span>
+          </h5>
 
-            <div class="row mt-3">
-              <div class="col-md-6">
-                <p><label>ID Proyek:</label> {{ $proyek->id_proyek ?? 'PRI-'.$proyek->id }}</p>
-                <p><label>Tanggal Mulai:</label> {{ \Carbon\Carbon::parse($proyek->tanggal_mulai)->translatedFormat('d F Y') }}</p>
-                <p><label>Deadline:</label> <span class="text-danger">{{ \Carbon\Carbon::parse($proyek->tanggal_selesai)->translatedFormat('d F Y') }}</span></p>
-                <p><label>Nilai Proyek:</label> Rp {{ number_format($proyek->nilai_proyek ?? 0, 0, ',', '.') }}</p>
-              </div>
-              <div class="col-md-6">
-                <p><label>Client:</label> {{ $proyek->client }}</p>
-                <p><label>PIC Client:</label> {{ $proyek->pic_client ?? '-' }}</p>
-                <p><label>PIC Internal:</label> {{ $proyek->pic_internal ?? '-' }}</p>
-                <p><label>Departemen:</label> {{ $proyek->departemen ?? '-' }}</p>
-              </div>
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <p><label>ID Proyek:</label> {{ $proyek->id_proyek ?? 'PRI-'.$proyek->id }}</p>
+              <p><label>Tanggal Mulai:</label> {{ \Carbon\Carbon::parse($proyek->tanggal_mulai)->translatedFormat('d F Y') }}</p>
+              <p><label>Deadline:</label> <span class="text-danger">{{ \Carbon\Carbon::parse($proyek->tanggal_selesai)->translatedFormat('d F Y') }}</span></p>
+              <p><label>Nilai Proyek:</label> Rp {{ number_format($proyek->nilai_proyek ?? 0, 0, ',', '.') }}</p>
             </div>
-          </div>
-
-          <!-- Progress -->
-          <div class="col-md-4 text-end">
-            <p><label>Progress Syarat Dokumen:</label></p>
-            @php
-              $progress = $totalSyarat > 0 ? round(($dokumenUploaded / $totalSyarat) * 100) : 0;
-            @endphp
-            <div class="progress mb-2">
-              <div class="progress-bar bg-info" role="progressbar"
-                   style="width: {{ $progress }}%;"
-                   aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
-                {{ $dokumenUploaded }}/{{ $totalSyarat }} ({{ $progress }}%)
-              </div>
+            <div class="col-md-6">
+              <p><label>Client:</label> {{ $proyek->client }}</p>
+              <p><label>PIC Client:</label> {{ $proyek->pic_client ?? '-' }}</p>
+              <p><label>PIC Internal:</label> {{ $proyek->pic_internal ?? '-' }}</p>
+              <p><label>Departemen:</label> {{ $proyek->departemen ?? '-' }}</p>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Tab Navigation -->
-      <ul class="nav nav-tabs mb-3">
-        <li class="nav-item">
-          <a class="nav-link active" href="#">Dokumen Syarat</a>
-        </li>
-      </ul>
-
-      <!-- Dokumen Syarat -->
-      <div>
-        @foreach ($daftarSyarat as $index => $jenis)
+        <!-- Progress -->
+        <div class="col-md-4 text-end">
+          <p><label>Progress Syarat Dokumen:</label></p>
           @php
-            $dokumen = $proyek->dokumen->firstWhere('jenis_dokumen', $jenis);
-            $label = ucwords(str_replace('_', ' ', $jenis));
+            $progress = $totalSyarat > 0 ? round(($dokumenUploaded / $totalSyarat) * 100) : 0;
           @endphp
-
-          <div class="doc-item d-flex justify-content-between align-items-center">
-            <div>
-              <i class="bi {{ $dokumen ? 'bi-check-circle' : 'bi-x-circle' }} me-2"></i>
-              {{ $index + 1 }}. {{ $label }}
-            </div>
-            <div>
-              @if ($dokumen)
-                <span class="text-success">Lengkap - Diupload {{ \Carbon\Carbon::parse($dokumen->created_at)->format('d M Y') }}</span>
-                <a href="{{ asset('storage/dokumen/' . $dokumen->nama_file) }}" target="_blank" class="btn btn-sm btn-outline-secondary ms-3">
-                  <i class="bi bi-paperclip"></i> Attachment
-                </a>
-              @else
-                <span class="text-danger">Belum Upload</span>
-              @endif
+          <div class="progress mb-2" style="height: 8px;">
+            <div class="progress-bar bg-info" role="progressbar"
+                 style="width: {{ $progress }}%;"
+                 aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
             </div>
           </div>
-        @endforeach
+          <small>{{ $dokumenUploaded }}/{{ $totalSyarat }} ({{ $progress }}%)</small>
+        </div>
       </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <ul class="nav nav-tabs mb-3">
+      <li class="nav-item">
+        <a class="nav-link active" href="#">Dokumen Syarat</a>
+      </li>
+    </ul>
+
+    <!-- Dokumen Syarat -->
+    <div>
+      @foreach ($daftarSyarat as $index => $jenis)
+        @php
+          $dokumen = $proyek->dokumen->firstWhere('jenis_dokumen', $jenis);
+          $label = ucwords(str_replace('_', ' ', $jenis));
+        @endphp
+
+        <div class="doc-item d-flex justify-content-between align-items-center">
+          <div>
+            <i class="bi {{ $dokumen ? 'bi-check-circle' : 'bi-x-circle' }} me-2"></i>
+            {{ $index + 1 }}. {{ $label }}
+          </div>
+          <div>
+            @if ($dokumen)
+              <span class="text-success">Lengkap - Diupload {{ \Carbon\Carbon::parse($dokumen->created_at)->format('d M Y') }}</span>
+              <a href="{{ asset('storage/dokumen/' . $dokumen->nama_file) }}" target="_blank" class="btn btn-sm btn-outline-secondary ms-3">
+                <i class="bi bi-paperclip"></i> Attachment
+              </a>
+            @else
+              <span class="text-danger">Belum Upload</span>
+            @endif
+          </div>
+        </div>
+      @endforeach
     </div>
   </div>
 </div>

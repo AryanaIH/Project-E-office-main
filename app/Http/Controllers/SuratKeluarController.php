@@ -134,4 +134,6 @@ class SuratKeluarController extends Controller
         $pdf = Pdf::loadView('pdf.surat-keluar', compact('surat'));
         return $pdf->stream('surat-keluar.pdf');
     }
+
+    
 }

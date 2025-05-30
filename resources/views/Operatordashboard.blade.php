@@ -21,15 +21,21 @@
                             <div class="col-md-4">
                                 <div class="hasil">
                                     <p style="border: 1px solid black; padding: 20px; margin-top:20px; border-radius: 10px;">
-                                        <span style="font-size:24px; padding-top: 10px;"><?php ?></span> <br>
-                                    <span >Draft Surat</span>
+                                        <a href="{{ route('surat-keluar.index', ['status' => 'Draft']) }}" style="text-decoration: none; color: black;">
+                                            <span style="font-size:24px; padding-top: 10px;">{{ $jumlahDraft }}</span>
+                                        </a>
+                                        <br>
+                                        <span>Draft Surat</span>
                                     </p>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="hasil">
                                     <p style="border: 1px solid black; padding: 20px; margin-top:20px; border-radius: 10px;">
-                                        <span style="font-size:24px; padding-top: 10px;"><?php ?></span> <br>
+                                    <a href="{{ route('surat-keluar.index', ['status' => 'Disetujui']) }}" style="text-decoration: none; color: black;">
+                                    <span style="font-size:24px; padding-top: 10px;">{{ $jumlahDisetujui }}</span>
+                                    </a>    
+                                    <br>
                                     <span >Surat Disetujui</span>
                                     </p>
                                 </div>
@@ -37,7 +43,10 @@
                             <div class="col-md-4">
                                 <div class="hasil">
                                     <p style="border: 1px solid black; padding: 20px; margin-top:20px; border-radius: 10px;">
-                                        <span style="font-size:24px; padding-top: 10px;"><?php  ?></span> <br>
+                                    <a href="{{ route('surat-keluar.index', ['status' => 'Dikirim']) }}" style="text-decoration: none; color: black;">
+                                    <span style="font-size:24px; padding-top: 10px;">{{ $jumlahTerkirim }}</span>
+                                    </a>    
+                                    <br>
                                     <span >Surat Terkirim</span>
                                     </p>
                                 </div>
@@ -45,7 +54,10 @@
                             <div class="col-md-4">
                                 <div class="hasil">
                                     <p style="border: 1px solid black; padding: 20px; margin-top:20px; border-radius: 10px;">
-                                        <span style="font-size:24px; padding-top: 10px;"><?php  ?></span> <br>
+                                    <a href="{{ route('pra-proyek.index', ['status_proyek' => 'baru']) }}" style="text-decoration: none; color: black;">
+                                    <span style="font-size:24px; padding-top: 10px;">{{ $jumlahBaru }}</span>
+                                    </a>    
+                                    <br>
                                     <span >Proyek Baru </span>
                                     </div>
                                     </p>
@@ -53,7 +65,10 @@
                             <div class="col-md-4">
                                 <div class="hasil">
                                     <p style="border: 1px solid black; padding: 20px; margin-top:20px; border-radius: 10px;">
-                                        <span style="font-size:24px; padding-top: 10px;"><?php  ?></span> <br>
+                                    <a href="{{ route('pra-proyek.index', ['status_proyek' => 'berjalan']) }}" style="text-decoration: none; color: black;">
+                                    <span style="font-size:24px; padding-top: 10px;">{{ $jumlahBerjalan }}</span>
+                                    </a>    
+                                    <br>
                                     <span >Proyek Berjalan </span>
                                     </p>
                                 </div>
@@ -61,7 +76,10 @@
                             <div class="col-md-4    ">
                                 <div class="hasil">
                                     <p style="border: 1px solid black; padding: 20px; margin-top:20px; border-radius: 10px;">
-                                        <span style="font-size:24px; padding-top: 10px;"><?php  ?></span> <br>
+                                    <a href="{{ route('pra-proyek.index', ['status_proyek' => 'selesai']) }}" style="text-decoration: none; color: black;">
+                                    <span style="font-size:24px; padding-top: 10px;">{{ $jumlahSelesai }}</span>
+                                    </a>    
+                                    <br>
                                     <span >Proyek Selesai</span>
                                     </p>
                                 </div>

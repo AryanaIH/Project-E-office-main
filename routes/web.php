@@ -16,7 +16,7 @@ use App\Http\Controllers\MonitoringController;
 
 Route::middleware('auth')->group(function () {
     // Route utama dashboard, bisa diakses via / atau /dashboard
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    // Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard', [DashboardController::class, 'index']);
 
     // Route khusus admin dan operator langsung panggil controller yang sama,
@@ -85,12 +85,14 @@ Route::get('/surat-keluar/{id}/edit', [SuratKeluarController::class, 'edit'])->n
 Route::put('/surat-keluar/{id}', [SuratKeluarController::class, 'update'])->name('surat-keluar.update');
 Route::delete('/surat-keluar/{id}', [SuratKeluarController::class, 'destroy'])->name('surat-keluar.destroy'); // ✅ tambahkan ini
 Route::get('/surat-keluar/{id}/preview', [SuratKeluarController::class, 'preview'])->name('surat-keluar.preview');
+Route::get('/api/generate-nomor-surat', [App\Http\Controllers\SuratKeluarController::class, 'generateNomorSurat']);
 
 
 
 use App\Http\Controllers\PraProyekController;
 
-Route::get('/pra-proyek', [PraProyekController::class, 'index'])->name('pra-proyek');
+
+Route::get('/pra-proyek', [PraProyekController::class, 'index'])->name('pra-proyek.index');
 Route::post('/pra-proyek/store', [PraProyekController::class, 'store'])->name('pra-proyek.store');
 Route::delete('/pra-proyek/{id}', [PraProyekController::class, 'destroy'])->name('pra-proyek.destroy');
 Route::get('/pra-proyek/{id}/edit', [PraProyekController::class, 'edit'])->name('pra-proyek.edit');
@@ -169,3 +171,12 @@ Route::post('/pra-proyek/upload-dokumen', [PraProyekController::class, 'storeDok
 
 
 Route::get('/pra-proyek/{id}/dokumen-status', [PraProyekController::class, 'getDokumenStatus']);
+
+use App\Http\Controllers\Admin\AdmindashboardController;
+use App\Http\Controllers\Operator\OperatordashboardController;
+
+Route::get('/admindashboard', [AdmindashboardController::class, 'index'])->name('admindashboard');
+
+Route::get('/operatordashboard', [OperatordashboardController::class, 'index'])->name('operatordashboard');
+
+

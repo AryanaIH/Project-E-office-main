@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class PraProyekController extends Controller
 {
-    // Daftar jenis dokumen syarat yang harus diupload
     private $daftarSyarat = [
         'surat_permohonan',
         'rab',
@@ -20,10 +19,36 @@ class PraProyekController extends Controller
         'kontrak_kerja'
     ];
 
-    // Tampilkan list pra proyek dengan filter, pagination 10
-    public function index()
+    public function index(Request $request)
     {
-        $praProyek = PraProyek::with('dokumen')->paginate(10);
+        $query = PraProyek::query();
+
+        $query->when($request->filled('status_proyek'), function ($q) use ($request) {
+            $q->where('status_proyek', $request->status_proyek);
+        });
+
+        $query->when($request->filled('tanggal_mulai'), function ($q) use ($request) {
+            $q->whereDate('tanggal_mulai', '>=', $request->tanggal_mulai);
+        });
+
+        $query->when($request->filled('tanggal_selesai'), function ($q) use ($request) {
+            $q->whereDate('tanggal_selesai', '<=', $request->tanggal_selesai);
+        });
+
+        $query->when($request->filled('jenis_proyek'), function ($q) use ($request) {
+            $q->where('jenis_proyek', $request->jenis_proyek);
+        });
+
+        $query->when($request->filled('search'), function ($q) use ($request) {
+            $q->where(function ($q) use ($request) {
+                $q->where('nama_proyek', 'like', '%' . $request->search . '%')
+                    ->orWhere('client', 'like', '%' . $request->search . '%')
+                    ->orWhere('lokasi_proyek', 'like', '%' . $request->search . '%');
+            });
+        });
+
+        $praProyek = $query->latest()->paginate(10);
+
         $listProyek = master_proyek::all();
         $listClient = master_proyek::select('client')->distinct()->get();
         $listlokasi = master_proyek::select('lokasi_proyek')->distinct()->get();
@@ -38,7 +63,6 @@ class PraProyekController extends Controller
         ));
     }
 
-    // Simpan data pra proyek baru berdasarkan master proyek (via dropdown pilihan)
     public function store(Request $request)
     {
         $request->validate([
@@ -61,14 +85,12 @@ class PraProyekController extends Controller
         return redirect()->back()->with('success', 'Pra-Proyek berhasil ditambahkan.');
     }
 
-    // Form edit pra proyek
     public function edit($id)
     {
         $praProyek = PraProyek::findOrFail($id);
         return view('pra-proyek.edit', compact('praProyek'));
     }
 
-    // Update data pra proyek
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -96,12 +118,10 @@ class PraProyekController extends Controller
         return redirect()->route('pra-proyek')->with('success', 'Data berhasil diperbarui!');
     }
 
-    // Hapus pra proyek beserta dokumen terkait (jika ingin)
     public function destroy($id)
     {
         $proyek = PraProyek::findOrFail($id);
 
-        // Optional: hapus file dokumen dari storage
         foreach ($this->daftarSyarat as $dokumen) {
             $dok = DokumenProyek::where('pra_proyek_id', $proyek->id)
                 ->where('jenis_dokumen', $dokumen)
@@ -118,7 +138,6 @@ class PraProyekController extends Controller
         return redirect()->route('pra-proyek')->with('success', 'Data berhasil dihapus.');
     }
 
-    // Detail proyek dan status dokumen
     public function show($id)
     {
         $proyek = PraProyek::with('dokumen')->findOrFail($id);
@@ -131,7 +150,6 @@ class PraProyekController extends Controller
         return view('detail-proyek', compact('proyek', 'daftarSyarat', 'totalSyarat', 'dokumenUploaded'));
     }
 
-    // Simpan atau update file dokumen syarat
     public function storeDokumen(Request $request)
     {
         $rules = [
@@ -175,7 +193,6 @@ class PraProyekController extends Controller
         return redirect()->back()->with('success', 'Dokumen berhasil disimpan.');
     }
 
-    // Ambil status dokumen yang sudah diupload
     public function getDokumenStatus($praProyekId)
     {
         $status = [];

@@ -93,7 +93,7 @@
       <h4>E-Office</h4>
       <ul class="nav flex-column px-3" id="sidebarMenu">
         <li class="nav-item">
-          <a href="/" class="nav-link"><i class="bi bi-globe"></i> Dashboard</a>
+          <a href="/dashboard" class="nav-link"><i class="bi bi-globe"></i> Dashboard</a>
         </li>
 
         @php
@@ -126,9 +126,6 @@
         </li>
         <li class="nav-item">
           <a href="/monitoringProyek" class="nav-link"><i class="bi bi-kanban"></i> Monitoring Proyek</a>
-        </li>
-        <li class="nav-item">
-          <a href="/Detail" class="nav-link"><i class="bi bi-file-earmark-text"></i> Detail</a>
         </li>
         
         @if(Auth::check() && Auth::user()->level !== 'operator')

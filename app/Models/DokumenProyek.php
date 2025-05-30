@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\JenisSurat;
 
 class DokumenProyek extends Model
 {
@@ -20,4 +21,9 @@ class DokumenProyek extends Model
         return $this->belongsTo(PraProyek::class);
     }
     
+    public function jenisSurat()
+{
+    return $this->belongsTo(JenisSurat::class, 'jenis_surat_id');
+}
+
 }

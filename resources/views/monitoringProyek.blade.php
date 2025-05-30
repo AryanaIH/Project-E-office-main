@@ -60,19 +60,22 @@
         <label>Status</label>
         <select class="form-select" id="filter-status">
           <option value="">Semua Status</option>
-          <option value="On Track">On Track</option>
-          <option value="Terlambat">Terlambat</option>
-          <option value="Selesai">Selesai</option>
+          <option value="Terkirim">Terkirim</option>
+          <option value="menunggu persetujuan">Menunggu Persetujuan</option>
+          <option value="draft">Draft</option>
+          <option value="disetujui">Disetujui</option>
+          <option value="ditolak">Ditolak</option>
         </select>
       </div>
       <div class="col-md-2">
-        <label>Client</label>
-        <select class="form-select" id="filter-klien">
-          <option value="">Semua Client</option>
-          <option value="PT Maju Bersama">PT Maju Bersama</option>
-          <option value="PT ABC">PT ABC</option>
-        </select>
-      </div>
+      <label>Client</label>
+      <select class="form-select" id="filter-klien">
+        <option value="">Semua Client</option>
+        @foreach($klienList as $klien)
+          <option value="{{ $klien }}">{{ $klien }}</option>
+        @endforeach
+      </select>
+    </div>
       <div class="col-md-2">
         <label>Tanggal Mulai</label>
         <input type="date" class="form-control" id="filter-mulai">

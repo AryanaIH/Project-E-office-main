@@ -16,6 +16,8 @@ class PraProyek extends Model
     'tanggal_mulai',
     'tanggal_selesai',
     'client',
+    'lokasi_proyek',
+    'jenis_proyek',
     'status_proyek',
     'surat_permohonan',
     'rab',

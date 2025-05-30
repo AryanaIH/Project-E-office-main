@@ -55,11 +55,18 @@
     <div class="content">
         <div class="content-inner">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="mb-0"><strong>Daftar Surat Keluar</strong></h4>
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalBuatSurat">
-                    + Buat Surat Baru
-                </button>
+                <div class="w-100 mb-3">
+                    <h4 class="mb-2"><strong>Daftar Surat Keluar</strong></h4>
+                    <hr class="mt-0">
+                </div>
             </div>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="mb-0"></h4>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalBuatSurat">
+        + Buat Surat Baru
+    </button>
+</div>
+
     <!-- Filter -->
             <form method="GET" action="{{ route('surat-keluar.index') }}">
     <div class="row g-2 mb-3 align-items-end">
@@ -67,7 +74,7 @@
             <label for="status" class="form-label">Status</label>
             <select class="form-select" name="status" id="status">
                 <option value="">Semua Status</option>
-                <option value="Terkirim" {{ request('status') == 'Terkirim' ? 'selected' : '' }}>Terkirim</option>
+                <option value="Dikirim" {{ request('status') == 'Dikirim' ? 'selected' : '' }}>Dikirim</option>
                 <option value="Menunggu Persetujuan" {{ request('status') == 'Menunggu Persetujuan' ? 'selected' : '' }}>Menunggu Persetujuan</option>
                 <option value="Disetujui" {{ request('status') == 'Disetujui' ? 'selected' : '' }}>Disetujui</option>
                 <option value="Ditolak" {{ request('status') == 'Ditolak' ? 'selected' : '' }}>Ditolak</option>
@@ -83,15 +90,16 @@
             <input type="date" class="form-control" name="tanggal_akhir" id="tanggal_akhir" value="{{ request('tanggal_akhir') }}">
         </div>
         <div class="col-md-2">
-            <label for="jenis_surat" class="form-label">Jenis Surat</label>
-            <select class="form-select" name="jenis_surat" id="jenis_surat">
-                <option value="">Semua Jenis</option>
-                <option value="Surat Permohonan" {{ request('jenis_surat') == 'Surat Permohonan' ? 'selected' : '' }}>Surat Permohonan</option>
-                <option value="Surat Pemberitahuan" {{ request('jenis_surat') == 'Surat Pemberitahuan' ? 'selected' : '' }}>Surat Pemberitahuan</option>
-                <option value="Surat Undangan" {{ request('jenis_surat') == 'Surat Undangan' ? 'selected' : '' }}>Surat Undangan</option>
-                <option value="Surat Keterangan" {{ request('jenis_surat') == 'Surat Keterangan' ? 'selected' : '' }}>Surat Keterangan</option>
-            </select>
-        </div>
+    <label for="jenis_surat" class="form-label">Jenis Surat</label>
+        <select class="form-select" name="jenis_surat_id" id="jenis_surat_id">
+                                <option value="">Pilih Jenis Surat</option>
+                                @foreach ($jenisSurat as $js)
+                                    <option value="{{ $js->id }}" {{ request('jenis_surat_id') == $js->id ? 'selected' : '' }}>
+                                        {{ $js->nama_jenis_surat }}
+                                    </option>
+                                @endforeach
+                            </select>
+    </div>
         <div class="col-md-3">
             <label for="search" class="form-label">Pencarian</label>
             <input type="text" class="form-control" name="search" id="search" placeholder="Cari nomor surat, tujuan, ..." value="{{ request('search') }}">
@@ -101,7 +109,6 @@
         </div>
     </div>
 </form>
-
             <!-- Tabel Surat -->
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -300,10 +307,10 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" style="max-height: 65vh; overflow-y: auto;">
-                        <div class="mb-3">
-                            <label for="nomor_surat_{{ $surat->id }}" class="form-label">Nomor Surat</label>
-                            <input type="text" name="nomor_surat" id="nomor_surat_{{ $surat->id }}" class="form-control" value="{{ $surat->nomor_surat }}" required>
-                        </div>
+                        <div class="col-md-4">
+                    <label for="nomor_surat" class="form-label">Nomor Surat</label>
+                    <input type="text" class="form-control" name="nomor_surat" id="nomor_surat" readonly>
+                </div>
                         <div class="mb-3">
                             <label for="tanggal_surat_{{ $surat->id }}" class="form-label">Tanggal Surat</label>
                             <input type="date" name="tanggal_surat" id="tanggal_surat_{{ $surat->id }}" class="form-control" value="{{ $surat->tanggal_surat }}" required>
@@ -370,6 +377,25 @@
         </div>
     </div>
 @endforeach
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const jenisSuratSelect = document.getElementById('jenis_surat_id');
+    const nomorSuratInput = document.getElementById('nomor_surat');
+
+    jenisSuratSelect.addEventListener('change', function () {
+      const selectedId = this.value;
+
+      if (selectedId) {
+        const today = new Date();
+        const year = today.getFullYear();
+        // Contoh format nomor surat: JS-<id>/2025
+        nomorSuratInput.value = `JS-${selectedId}/${year}`;
+      } else {
+        nomorSuratInput.value = '';
+      }
+    });
+  });
+</script>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
