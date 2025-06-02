@@ -33,14 +33,6 @@
             padding: 6px 10px;
             border-radius: 12px;
         }
-        .btn-purple {
-            background-color: #6f42c1;
-            color: #fff;
-        }
-        .btn-purple:hover {
-            background-color: #5a32a3;
-            color: #fff;
-        }
     </style>
 </head>
 <body>
@@ -128,8 +120,8 @@
                             <tbody>
                                 @forelse($suratKeluar as $surat)
                                     @php
-                                        $statusLower = strtolower($surat->status);
-                                        $badgeColor = match($statusLower) {
+                                        $statusNormalized = strtolower(str_replace(' ', '', $surat->status)); // hilangkan spasi dan kecilkan
+                                        $badgeColor = match($statusNormalized) {
                                             'terkirim' => 'bg-info',
                                             'menunggu persetujuan' => 'bg-warning text-dark',
                                             'draft' => 'bg-secondary',
@@ -152,12 +144,12 @@
                                                 Lihat
                                             </button>
 
-                                            @if(in_array($statusLower, ['menunggu persetujuan', 'draft', 'ditolak']))
+                                            @if(in_array($statusNormalized, ['menunggu persetujuan', 'draft', 'ditolak']))
                                             <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditSurat{{ $surat->id }}">
                                              Edit
                                             </button>
                                             @else
-                                            <a class="btn btn-sm btn-purple" href="{{ route('surat-keluar.preview', $surat->id) }}" target="_blank">Cetak</a>
+                                            <a class="btn btn-sm btn-primary" style="background-color: #6f42c1; border-color: #6f42c1;" href="{{ route('surat-keluar.preview', $surat->id) }}" target="_blank">Cetak</a>
 
                                             @endif
                                         </td>
@@ -259,8 +251,8 @@
                     <h6 class="mb-3">Informasi Tujuan</h6>
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
-                            <label for="jenis_alamat" class="form-label">Jenis Alamat</label>
-                            <select name="jenis_alamat" id="jenis_alamat" class="form-select">
+                            <label for="alamat" class="form-label">Alamat</label>
+                            <select name="alamat" id="alamat" class="form-select">
                                 <option value="">-- Pilih Alamat --</option>
                                 @foreach ($tujuanSurat->pluck('alamat')->unique() as $alamat)
                                     <option value="{{ $alamat }}">{{ $alamat }}</option>
@@ -307,10 +299,6 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body" style="max-height: 65vh; overflow-y: auto;">
-                        <div class="col-md-4">
-                    <label for="nomor_surat" class="form-label">Nomor Surat</label>
-                    <input type="text" class="form-control" name="nomor_surat" id="nomor_surat" readonly>
-                </div>
                         <div class="mb-3">
                             <label for="tanggal_surat_{{ $surat->id }}" class="form-label">Tanggal Surat</label>
                             <input type="date" name="tanggal_surat" id="tanggal_surat_{{ $surat->id }}" class="form-control" value="{{ $surat->tanggal_surat }}" required>

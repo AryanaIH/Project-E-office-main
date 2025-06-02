@@ -28,15 +28,8 @@ class PraProyek extends Model
 ];
 
     public function dokumenProyeks()
-{
-    return $this->hasMany(DokumenProyek::class);
-}
-// app/Models/PraProyek.php
-public function dokumen()
-{
-    return $this->hasMany(DokumenProyek::class, 'pra_proyek_id');
-}
-
-
+    {
+        return $this->hasMany(DokumenProyek::class,'id_proyeks');
+    }
 }
 

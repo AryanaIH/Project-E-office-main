@@ -58,9 +58,10 @@ class SuratKeluarController extends Controller
         $request->validate([
             'nomor_surat' => 'required|string|max:255',
             'tanggal_surat' => 'required|date',
-            'jenis_surat_id' => 'required|exists:jenis_surat,id',
+            'jenis_surat_id' => 'required|exists:jenis_surats,id',
             'perihal' => 'required|string',
             'tujuan' => 'required|string',
+            'alamat' => 'required|string',
             'isi_surat' => 'required|string',
             'status' => 'nullable|string|in:Draft,Dikirim,Disetujui,Ditolak',
         ]);
@@ -71,6 +72,7 @@ class SuratKeluarController extends Controller
             'jenis_surat_id' => $request->jenis_surat_id,
             'perihal' => $request->perihal,
             'tujuan' => $request->tujuan,
+            'alamat' => $request->alamat,
             'isi_surat' => $request->isi_surat,
             'status' => $request->status ?? 'Draft',
         ]);
@@ -97,21 +99,21 @@ class SuratKeluarController extends Controller
         $surat = SuratKeluar::findOrFail($id);
 
         $request->validate([
-            'nomor_surat' => 'required|string|max:255',
             'tanggal_surat' => 'required|date',
-            'jenis_surat_id' => 'required|exists:jenis_surat,id',
-            'perihal' => 'required|string|max:255',
-            'tujuan' => 'required|string|max:255',
+            'jenis_surat_id' => 'required|exists:jenis_surats,id',
+            'perihal' => 'required|string',
+            'tujuan' => 'required|string',
+            'alamat' => 'required|string',
             'isi_surat' => 'required|string',
-            'status' => 'nullable|string|in:Draft,Dikirim,Disetujui,Ditolak',
+            'status' => 'required|string|in:Draft,Dikirim,Disetujui,Ditolak',
         ]);
 
         $surat->update([
-            'nomor_surat' => $request->nomor_surat,
             'tanggal_surat' => $request->tanggal_surat,
             'jenis_surat_id' => $request->jenis_surat_id,
             'perihal' => $request->perihal,
             'tujuan' => $request->tujuan,
+            'alamat' => $request->alamat,
             'isi_surat' => $request->isi_surat,
             'status' => $request->status ?? $surat->status,
         ]);

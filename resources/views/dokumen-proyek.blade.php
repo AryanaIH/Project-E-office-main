@@ -110,7 +110,6 @@
                 <div class="text-danger small">{{ $message }}</div>
               @enderror
             </div>
-
             {{-- Template Dokumen --}}
             <div class="mb-3">
               <label for="template_dokumen" class="form-label">Template Dokumen</label>
@@ -118,7 +117,7 @@
               @if(isset($dokumen) && $dokumen->template_dokumen)
                 <small class="text-muted">
                   File saat ini: 
-                  <a href="{{ Storage::url($dokumen->template_dokumen) }}" target="_blank">
+                  <a href="{{ Storage::url(path: $dokumen->template_dokumen) }}" target="_blank">
                     {{ basename($dokumen->template_dokumen) }}
                   </a>
                 </small>
@@ -137,6 +136,18 @@
               @error('approval')
                 <div class="text-danger small">{{ $message }}</div>
               @enderror
+            </div>
+
+              <div class="mb-3">
+              <label for="proyeks_id" class="form-label">Nama Proyek</label>
+              <select class="form-select" name="proyeks_id" required>
+                <option disabled >-- Pilih Id Proyeks --</option>
+                @foreach($id_proyeks as $proyeks)
+                  <option value="{{ $proyeks->id }}">
+                    {{ $proyeks->nama_proyek }}
+                  </option>
+                @endforeach
+              </select>
             </div>
 
             <div class="d-flex flex-wrap gap-2">
@@ -161,7 +172,7 @@
                 <tr>
                   <th>ID Dokumen</th>
                   <th>Jenis Dokumen</th>
-                  <th>Template</th>
+                  <th>Nama File</th>
                   <th>Persyaratan Approval</th>
                   <th class="text-center" style="width: 80px;">Aksi</th>
                 </tr>
@@ -172,9 +183,9 @@
                     <td>{{ $item->id_dokumen }}</td>
                     <td>{{ $item->jenisSurat->nama_jenis_surat ?? '-' }}</td>
                     <td>
-                      @if($item->template_dokumen)
-                        <a href="{{ Storage::url($item->template_dokumen) }}" target="_blank">
-                          {{ basename($item->template_dokumen) }}
+                      @if($item->nama_file)
+                        <a href="{{ asset('templates/' . $item->nama_file) }}" target="_blank">
+                          {{ basename($item->nama_file) }}
                         </a>
                       @else
                         <em>Tidak ada file</em>
@@ -182,9 +193,7 @@
                     </td>
                     <td>{{ $item->approval }}</td>
                     <td class="text-center d-flex gap-1 justify-content-center">
-                      <a href="{{ route('dokumen-proyek.edit', $item->id_dokumen) }}" class="btn btn-sm btn-warning">
-                        <i class="bi bi-pencil-square"></i>
-                      </a>  
+                      <a href="{{ asset('storage/' . $item->template_dokumen) }}" target="_blank">  
                       <form action="{{ route('dokumen-proyek.destroy', $item->id_dokumen) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus dokumen ini?')">
                         @csrf
                         @method('DELETE')

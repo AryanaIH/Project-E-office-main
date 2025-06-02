@@ -10,21 +10,22 @@ class DetailController extends Controller
 {
     public function show($id)
 {
-    $proyek = PraProyek::with('dokumen')->findOrFail($id);
+    $proyek = PraProyek::withCount('dokumenProyeks')->findOrFail($id);
 
     // Daftar jenis dokumen yang disyaratkan
     $daftarSyarat = [
-        'surat_perjanjian_kerjasama',
-        'dokumen_penawaran',
-        'rencana_anggaran_biaya',
-        'dokumen_spesifikasi_teknis',
-        'jadwal_pelaksanaan_proyek',
+                    'surat_permohonan',
+                    'rab',
+                    'dokumen_teknis',
+                    'proposal_teknis',
+                    'izin_lokasi',
+                    'kontrak_kerja'
     ];
 
     $totalSyarat = count($daftarSyarat);
 
     // Hitung jumlah dokumen yang sudah diunggah dan sesuai dengan daftar syarat
-    $dokumenUploaded = $proyek->dokumen->whereIn('jenis_dokumen', $daftarSyarat)->count();
+    $dokumenUploaded = $proyek->dokumen_proyeks_count;
 
     return view('detail', [
         'proyek' => $proyek,

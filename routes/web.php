@@ -54,9 +54,7 @@ Route::get('/tujuan-surat', function () {
     return view('tujuan-surat');
 });
 
-Route::get('/dokumen-proyek', function () {
-    return view('dokumen-proyek');
-});
+Route::resource('dokumen-proyek', DokumenProyekController::class);
 
 
 Route::get('/monitoringProyek', [MonitoringController::class, 'PraProyek']);

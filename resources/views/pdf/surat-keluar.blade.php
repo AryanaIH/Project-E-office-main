@@ -61,7 +61,7 @@
         </tr>
         <tr>
             <td><strong>Jenis Surat</strong></td>
-            <td>: {{ $surat->jenis_surat }}</td>
+            <td>: {{ $surat->jenisSurat->nama_jenis_surat ?? '-' }}</td>
         </tr>
         <tr>
             <td><strong>Perihal</strong></td>

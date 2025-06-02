@@ -113,9 +113,6 @@
             </div>
             <div class="col-md-6">
               <p><label>Client:</label> {{ $proyek->client }}</p>
-              <p><label>PIC Client:</label> {{ $proyek->pic_client ?? '-' }}</p>
-              <p><label>PIC Internal:</label> {{ $proyek->pic_internal ?? '-' }}</p>
-              <p><label>Departemen:</label> {{ $proyek->departemen ?? '-' }}</p>
             </div>
           </div>
         </div>
@@ -137,39 +134,6 @@
       </div>
     </div>
 
-    <!-- Tab Navigation -->
-    <ul class="nav nav-tabs mb-3">
-      <li class="nav-item">
-        <a class="nav-link active" href="#">Dokumen Syarat</a>
-      </li>
-    </ul>
-
-    <!-- Dokumen Syarat -->
-    <div>
-      @foreach ($daftarSyarat as $index => $jenis)
-        @php
-          $dokumen = $proyek->dokumen->firstWhere('jenis_dokumen', $jenis);
-          $label = ucwords(str_replace('_', ' ', $jenis));
-        @endphp
-
-        <div class="doc-item d-flex justify-content-between align-items-center">
-          <div>
-            <i class="bi {{ $dokumen ? 'bi-check-circle' : 'bi-x-circle' }} me-2"></i>
-            {{ $index + 1 }}. {{ $label }}
-          </div>
-          <div>
-            @if ($dokumen)
-              <span class="text-success">Lengkap - Diupload {{ \Carbon\Carbon::parse($dokumen->created_at)->format('d M Y') }}</span>
-              <a href="{{ asset('storage/dokumen/' . $dokumen->nama_file) }}" target="_blank" class="btn btn-sm btn-outline-secondary ms-3">
-                <i class="bi bi-paperclip"></i> Attachment
-              </a>
-            @else
-              <span class="text-danger">Belum Upload</span>
-            @endif
-          </div>
-        </div>
-      @endforeach
-    </div>
   </div>
 </div>
 

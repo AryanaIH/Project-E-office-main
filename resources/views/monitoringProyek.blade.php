@@ -60,11 +60,11 @@
         <label>Status</label>
         <select class="form-select" id="filter-status">
           <option value="">Semua Status</option>
-          <option value="Terkirim">Terkirim</option>
-          <option value="menunggu persetujuan">Menunggu Persetujuan</option>
-          <option value="draft">Draft</option>
-          <option value="disetujui">Disetujui</option>
-          <option value="ditolak">Ditolak</option>
+          <option value="Baru">Baru</option>
+          <option value="Berjalan">Berjalan</option>
+          <option value="Selesai">Selesai</option>
+          <option value="Ditolak">Ditolak</option>
+          <option value="ditolak">Disetujui</option>
         </select>
       </div>
       <div class="col-md-2">
@@ -137,7 +137,7 @@
                     'kontrak_kerja',
                   ];
                   $totalDocs = count($docs);
-                  $uploadedCount = 1;
+                  $uploadedCount = $proyek->dokumen_proyeks_count;
 
                   foreach ($docs as $docKey) {
                     if (!empty($proyek->$docKey)) {

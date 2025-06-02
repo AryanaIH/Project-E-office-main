@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\master_proyek;
 use App\Models\PraProyek;
 use App\Models\DokumenProyek;
+use App\Models\UploadedDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -56,10 +57,11 @@ class PraProyekController extends Controller
         $listTanggalMulai = master_proyek::select('tanggal_mulai')->distinct()->orderBy('tanggal_mulai')->get();
         $listTanggalSelesai = master_proyek::select('tanggal_selesai')->distinct()->orderBy('tanggal_selesai')->get();
         $listStatus = master_proyek::select('status_proyek')->distinct()->get();
+        $dropdownOptions = DokumenProyek::pluck('nama_file', 'id_dokumen');
 
         return view('pra-proyek', compact(
             'praProyek', 'listProyek', 'listClient', 'listlokasi',
-            'listJenisProyek', 'listTanggalMulai', 'listTanggalSelesai', 'listStatus'
+            'listJenisProyek', 'listTanggalMulai', 'listTanggalSelesai', 'listStatus', 'dropdownOptions'
         ));
     }
 
@@ -207,4 +209,49 @@ class PraProyekController extends Controller
 
         return response()->json($status);
     }
+    public function showForm()
+    {
+        $docs = [
+            'ktp' => 'KTP',
+            'npwp' => 'NPWP',
+            // Tambah jenis dokumen lain jika perlu
+        ];
+
+        $existingFiles = [];
+        foreach ($docs as $id => $label) {
+            $existingFiles[$id] = UploadedDocument::where('document_type', $id)
+                ->where('user_id', auth()->id())
+                ->get();
+        }
+
+        return view('dokumen.form', compact('docs', 'existingFiles'));
+    }
+    public function upload(Request $request)
+    {
+        $docs = ['ktp', 'npwp'];
+
+        foreach ($docs as $docType) {
+            $option = $request->input("upload_option_{$docType}");
+
+            if ($option === 'upload' && $request->hasFile("file_{$docType}")) {
+                $file = $request->file("file_{$docType}");
+                $filePath = $file->store('uploads', 'public');
+
+                UploadedDocument::create([
+                    'user_id' => auth()->id(),
+                    'document_type' => $docType,
+                    'file_name' => $file->getClientOriginalName(),
+                    'file_path' => $filePath,
+                ]);
+            }
+
+            if ($option === 'existing') {
+                $existingPath = $request->input("existing_{$docType}");
+                // Anda bisa menyimpan referensi atau menghubungkannya sesuai kebutuhan
+            }
+        }
+
+        return redirect()->back()->with('success', 'Dokumen berhasil diproses.');
+    }
+    
 }

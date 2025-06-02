@@ -209,11 +209,16 @@
 
             @foreach($docs as $id => $label)
               <div class="mb-3 upload-section d-none" id="upload_{{ $id }}">
-            <label for="file_{{ $id }}" class="form-label fw-bold">{{ $label }} (Upload PDF)</label>
-            <input type="file" name="{{ $id }}" class="form-control" id="file_{{ $id }}" accept="application/pdf" />
-          </div>
-
+                <label for="file_{{ $id }}" class="form-label fw-bold">{{ $label }} (Pilih Dokumen)</label>
+                <select name="{{ $id }}" id="file_{{ $id }}" class="form-select">
+                  <option value="">-- Pilih Dokumen --</option>
+                  @foreach($dropdownOptions as $docId => $docName)
+                    <option value="{{ $docId }}">{{ $docName }}</option>
+                  @endforeach
+                </select>
+              </div>
             @endforeach
+
           </div>
 
 

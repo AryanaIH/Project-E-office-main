@@ -8,22 +8,22 @@ use App\Models\JenisSurat;
 
 class DokumenProyek extends Model
 {
-    use HasFactory;
+    protected $table = 'dokumen_proyeks';
+    protected $primaryKey = 'id_dokumen'; // Jika memang memakai id_dokumen
+    public $incrementing = false; // Karena formatnya seperti 'DOC-001'
+    protected $keyType = 'string';
 
     protected $fillable = [
-        'pra_proyek_id',
-        'jenis_dokumen',
+        'id_dokumen',
+        'jenis_surat_id',
         'nama_file',
+        'approval',
+        'id_proyeks',
     ];
 
-    public function praProyek()
-    {
-        return $this->belongsTo(PraProyek::class);
-    }
-    
     public function jenisSurat()
-{
-    return $this->belongsTo(JenisSurat::class, 'jenis_surat_id');
+    {
+        return $this->belongsTo(JenisSurat::class, 'jenis_surat_id');
+    }
 }
 
-}
