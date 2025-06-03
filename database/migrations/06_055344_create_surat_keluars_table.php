@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\JenisSurat;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,11 +15,8 @@ return new class extends Migration
         Schema::create('surat_keluar', function (Blueprint $table) {
             $table->id();
             $table->string('nomor_surat');
-
-            // Foreign key ke tabel jenis_surat
-            $table->foreignId('jenis_surat_id')
-                ->constrained('jenis_surat')
-                ->onDelete('cascade');
+            
+            $table->foreignIdFor(JenisSurat::class)->constrained()->cascadeOnDelete();
 
             $table->date('tanggal_surat');
             $table->string('perihal');
