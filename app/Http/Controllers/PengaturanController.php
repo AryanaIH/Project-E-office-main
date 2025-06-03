@@ -5,7 +5,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
-class PengaturanController extends Controller
+class pengaturanController extends Controller
 {
     public function index(Request $request)
     {
