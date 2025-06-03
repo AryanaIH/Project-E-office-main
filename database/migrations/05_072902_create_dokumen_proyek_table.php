@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->foreignIdFor(JenisSurat::class)->constrained()->cascadeOnDelete();
             $table->string('approval')->nullable();
             $table->string('nama_file'); // nama file tersimpan
-            $table->string('approval');
             $table->string('template_dokumen')->nullable();
             $table->string('id_proyeks');
             $table->timestamps();
