@@ -22,7 +22,7 @@ class JenisSuratController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_jenis_surat' => 'required|unique:jenis_surats,id_jenis_surat',
+            'id_jenis_surat' => 'required|unique:jenis_surat,id_jenis_surat',
             'nama_jenis_surat' => 'required'
         ]);
 
