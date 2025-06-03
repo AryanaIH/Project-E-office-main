@@ -100,7 +100,7 @@ class SuratKeluarController extends Controller
 
         $request->validate([
             'tanggal_surat' => 'required|date',
-            'jenis_surat_id' => 'required|exists:jenis_surats,id',
+            'jenis_surat_id' => 'required|exists:jenis_surat,id',
             'perihal' => 'required|string',
             'tujuan' => 'required|string',
             'alamat' => 'required|string',
