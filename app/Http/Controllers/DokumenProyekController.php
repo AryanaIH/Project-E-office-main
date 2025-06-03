@@ -50,7 +50,6 @@ class DokumenProyekController extends Controller
             'nama_file' => $templatePath,
             'approval' => $request->approval,
             'id_proyeks'=> $request->proyeks_id,
-            'template_dokumen' => $templatePath,
         ]);
 
         return redirect()->route('dokumen-proyek.index')->with('success', 'Dokumen berhasil ditambahkan.');
@@ -64,10 +63,9 @@ class DokumenProyekController extends Controller
             'jenis_surat_id' => 'required|exists:jenis_surats,id',
             'nama_file' => 'required|string',
             'approval' => 'nullable|string',
-            'template_dokumen' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
         ]);
 
-        $templatePath = $dokumen->template_dokumen;
+        $templatePath = $dokumen->nama_file;
 
         if ($request->hasFile('template_dokumen')) {
             if ($templatePath && Storage::exists('public/' . $templatePath)) {
@@ -81,9 +79,8 @@ class DokumenProyekController extends Controller
 
         $dokumen->update([
             'jenis_surat_id' => $request->jenis_surat_id,
-            'nama_file' => $request->nama_file,
+            'nama_file' => $request->$templatePath,
             'approval' => $request->approval,
-            'template_dokumen' => $templatePath,
         ]);
 
         return redirect()->route('dokumen-proyek.index')->with('success', 'Dokumen berhasil diperbarui.');
@@ -93,8 +90,8 @@ class DokumenProyekController extends Controller
     {
         $dokumen = DokumenProyek::findOrFail($id);
 
-        if ($dokumen->template_dokumen && file_exists('templates/' . $dokumen->template_dokumen)) {
-            unlink('templates/' . $dokumen->template_dokumen);
+        if ($dokumen->nama_file && file_exists('templates/' . $dokumen->nama_file)) {
+            unlink('templates/' . $dokumen->nama_file);
         }
 
         $dokumen->delete();

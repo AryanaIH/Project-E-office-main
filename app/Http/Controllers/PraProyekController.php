@@ -125,19 +125,18 @@ class PraProyekController extends Controller
         $proyek = PraProyek::findOrFail($id);
 
         foreach ($this->daftarSyarat as $dokumen) {
-            $dok = DokumenProyek::where('pra_proyek_id', $proyek->id)
-                ->where('jenis_dokumen', $dokumen)
+            $dok = DokumenProyek::where('id_proyeks', $proyek->id)
                 ->first();
 
             if ($dok && $dok->nama_file) {
-                Storage::disk('public')->delete('dokumen/' . $dok->nama_file);
+                unlink('templates/' . $dok->nama_file);
                 $dok->delete();
             }
         }
 
         $proyek->delete();
 
-        return redirect()->route('pra-proyek')->with('success', 'Data berhasil dihapus.');
+        return redirect()->route('pra-proyek.index')->with('success', 'Data berhasil dihapus.');
     }
 
     public function show($id)

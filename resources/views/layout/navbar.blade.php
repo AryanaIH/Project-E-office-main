@@ -107,8 +107,8 @@
             </a>
             <div class="collapse" id="masterDataMenu">
               <ul class="list-unstyled fw-normal pb-1 small ps-1">
-                <li><a href="/departement" class="nav-link">Master Departemen</a></li>
-                <li><a href="/pengguna" class="nav-link">Master Pengguna</a></li>
+                <!-- <li><a href="/departement" class="nav-link">Master Departemen</a></li>
+                <li><a href="/pengguna" class="nav-link">Master Pengguna</a></li> -->
                 <li><a href="/jenis-surat" class="nav-link">Master Jenis Surat</a></li>
                 <li><a href="/tujuan-surat" class="nav-link">Master Tujuan Surat</a></li>
                 <li><a href="/masterProyek" class="nav-link">Master Proyek</a></li>

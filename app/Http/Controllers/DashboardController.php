@@ -18,7 +18,7 @@ class DashboardController extends Controller
             'jumlahTerkirim'   => SuratKeluar::where('status', 'Dikirim')->count(),
             'jumlahBaru'      => PraProyek::where('status_proyek', 'baru')->count(),
             'jumlahBerjalan'  => PraProyek::where('status_proyek', 'berjalan')->count(),
-            'jumlahSelesai'   => PraProyek::where('status_proyek', 'dikirim')->count(),
+            'jumlahSelesai'   => PraProyek::where('status_proyek', 'selesai')->count(),
         ];
 
         // Ambil user yang sedang login

@@ -162,7 +162,7 @@
           </div>
 
           <!-- Checklist Dokumen -->
-          <div class="row mb-3">
+          <!-- <div class="row mb-3">
             <div class="col-md-6">
               <div class="form-check">
                 <input class="form-check-input doc-toggle" type="checkbox" id="surat_permohonan" name="surat_permohonan" />
@@ -191,7 +191,7 @@
                 <label class="form-check-label" for="kontrakKerja">Kontrak Kerja</label>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <!-- Upload Dokumen -->
           <div id="uploadSections">
@@ -225,7 +225,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-          <button type="submit" class="btn btn-primary">Simpan Dokumen</button>
+          <!-- <button type="submit" class="btn btn-primary">Simpan Dokumen</button> -->
         </div>
       </form>
     </div>
@@ -321,7 +321,7 @@
           </td>
             <td>
         <!-- Tombol Atur Syarat Dokumen -->
-          <button class="btn btn-sm btn-warning me-1 btnAturSyarat" 
+          <button class="btn btn-sm btn-primary me-1 btnAturSyarat" 
                 data-bs-toggle="modal" 
                 data-bs-target="#modalSyaratDokumen"
                 data-id="{{ $proyek->id }}"
@@ -331,7 +331,7 @@
                 data-jenis="{{ $proyek->jenis_proyek }}"
                 data-tanggal="{{ $proyek->tanggal_mulai }} s/d {{ $proyek->tanggal_selesai }}"
                 data-status="{{ $proyek->status_proyek }}">
-                <i class="bi bi-pencil-square"></i>
+                <i class="bi bi-eye"></i>
           </button>
 
         <!-- Tombol Hapus -->
