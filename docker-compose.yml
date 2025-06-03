@@ -1,33 +1,28 @@
 version: '3.8'
 
 services:
-  mysql-office:
-    image: mysql:8.0.41-debian
-    container_name: mysql-office
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: db_arsip
-      MYSQL_ROOT_PASSWORD: ""
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+  app:
+    build:
+      context: .
     ports:
-      - "3307:3306"
+      - "9000:9000"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - .:/var/www
     networks:
-      - office_net
+      - laravel
 
-  redis-office:
-    image: redis:latest
-    container_name: redis-office
-    restart: unless-stopped
+  nginx:
+    image: nginx:alpine
     ports:
-      - "6370:6379"
+      - "8080:80"
+    volumes:
+      - .:/var/www
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
     networks:
-      - office_net
-
-volumes:
-  mysql_data:
+      - laravel
 
 networks:
-  office_net:
+  laravel:
     driver: bridge
