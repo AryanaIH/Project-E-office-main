@@ -7,7 +7,7 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\JenisSuratController;
 use App\Http\Controllers\TujuanSuratController;
 use App\Http\Controllers\DokumenProyekController;
-use App\Http\Controllers\pengaturanController;
+use App\Http\Controllers\PengaturanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MonitoringController;
 
@@ -176,5 +176,4 @@ Route::get('/pra-proyek/{id}/dokumen-status', [PraProyekController::class, 'getD
 // Route::get('/admindashboard', [AdmindashboardController::class, 'index'])->name('admindashboard');
 
 // Route::get('/operatordashboard', [OperatordashboardController::class, 'index'])->name('operatordashboard');
-
 
