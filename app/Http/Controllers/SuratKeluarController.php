@@ -43,7 +43,7 @@ class SuratKeluarController extends Controller
         $jenisSurat = JenisSurat::all();
         $tujuanSurat = TujuanSurat::all();
 
-        return view('surat-keluar.index', compact('suratKeluar', 'jenisSurat', 'tujuanSurat'));
+        return view('suratKeluar', compact('suratKeluar', 'jenisSurat', 'tujuanSurat'));
     }
 
     public function create()
