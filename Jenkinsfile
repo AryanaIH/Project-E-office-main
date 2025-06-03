@@ -21,6 +21,7 @@ pipeline {
                     sh 'docker compose exec -T php php artisan key:generate'
                     sh 'docker compose exec -T php php artisan migrate:fresh --seed'
                     sh 'docker compose exec -T php npm run build'
+                    sh 'chmod -R 777 public/templates || true'
                 }
             }
         }
