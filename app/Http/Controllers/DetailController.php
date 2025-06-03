@@ -27,7 +27,7 @@ class DetailController extends Controller
     // Hitung jumlah dokumen yang sudah diunggah dan sesuai dengan daftar syarat
     $dokumenUploaded = $proyek->dokumen_proyeks_count;
 
-    return view('detail', [
+    return view('Detail', [
         'proyek' => $proyek,
         'daftarSyarat' => $daftarSyarat,
         'totalSyarat' => $totalSyarat,
