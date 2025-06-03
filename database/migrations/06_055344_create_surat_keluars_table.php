@@ -15,8 +15,8 @@ return new class extends Migration
         Schema::create('surat_keluar', function (Blueprint $table) {
             $table->id();
             $table->string('nomor_surat');
-            
-            $table->foreignIdFor(JenisSurat::class)->constrained()->cascadeOnDelete();
+
+            $table->foreignId('jenis_surat_id')->constrained('jenis_surat')->cascadeOnDelete();
 
             $table->date('tanggal_surat');
             $table->string('perihal');
