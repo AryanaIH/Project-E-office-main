@@ -12,10 +12,9 @@ return new class extends Migration {
             $table->string('id_dokumen')->primary();
             
             // Tambahkan di sini langsung
-            $table->foreignIdFor(JenisSurat::class)->constrained()->cascadeOnDelete();
-            $table->string('approval')->nullable();
+            $table->foreignId('jenis_surat_id')->constrained('jenis_surat')->cascadeOnDelete();
             $table->string('nama_file'); // nama file tersimpan
-            $table->string('template_dokumen')->nullable();
+            $table->string('approval');
             $table->string('id_proyeks');
             $table->timestamps();
         });
