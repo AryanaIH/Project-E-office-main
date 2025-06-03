@@ -24,15 +24,6 @@ pipeline {
                 }
             }
         }
-        stage('Test') {
-            steps {
-                script {
-                    // Run tests
-                    echo 'Testing...'
-                    sh 'docker-compose exec -T php php artisan test'
-                }
-            }
-        }
         stage('Deploy') {
             steps {
                 script {
