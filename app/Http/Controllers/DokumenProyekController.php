@@ -31,7 +31,7 @@ class DokumenProyekController extends Controller
     {
         $request->validate([
             'id_dokumen' => 'required|unique:dokumen_proyeks,id_dokumen',
-            'jenis_surat_id' => 'required|exists:jenis_surats,id',
+            'jenis_surat_id' => 'required|exists:jenis_surat,id',
             'approval' => 'required|string',
             'template_dokumen' => 'required|file|mimes:pdf|max:2048',
         ]);
