@@ -170,11 +170,11 @@ Route::post('/pra-proyek/upload-dokumen', [PraProyekController::class, 'storeDok
 
 Route::get('/pra-proyek/{id}/dokumen-status', [PraProyekController::class, 'getDokumenStatus']);
 
-use App\Http\Controllers\Admin\AdmindashboardController;
-use App\Http\Controllers\Operator\OperatordashboardController;
+// use App\Http\Controllers\Admin\AdmindashboardController;
+// use App\Http\Controllers\Operator\OperatordashboardController;
 
-Route::get('/admindashboard', [AdmindashboardController::class, 'index'])->name('admindashboard');
+// Route::get('/admindashboard', [AdmindashboardController::class, 'index'])->name('admindashboard');
 
-Route::get('/operatordashboard', [OperatordashboardController::class, 'index'])->name('operatordashboard');
+// Route::get('/operatordashboard', [OperatordashboardController::class, 'index'])->name('operatordashboard');
 
 
