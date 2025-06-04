@@ -48,7 +48,7 @@
         <div class="content-inner">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="w-100 mb-3">
-                    <h4 class="mb-2"><strong>Daftar Surat Keluar</strong></h4>
+                    <h4 class="mb-2"><strong>Daftar Surat Keluar Kampus 4</strong></h4>
                     <hr class="mt-0">
                 </div>
             </div>
